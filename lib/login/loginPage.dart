@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../Home/homepage.dart';
 import '../Utils/Palette.dart';
 import '../widget/button_app.dart';
 import '../widget/edittext.dart';
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(50,0,0,0),
+          padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
           child: logo(),
         )
       ],
@@ -57,7 +59,9 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.05,
               ),
-              ButtonApp.buttonMain(context, 'เข้าสู่ระบบ', () {})
+              ButtonApp.buttonMain(context, 'เข้าสู่ระบบ', () {
+                Get.to(const HomePage());
+              })
             ],
           ),
         ),
