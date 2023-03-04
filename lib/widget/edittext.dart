@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../Utils/Palette.dart';
 
 class Edittext {
-  static Widget edittextGeneral(String title, String unit) {
+  static Widget edittextGeneral(String title, String unit,Function(String)? onChanged,bool validate) {
     return Container(
       margin: const EdgeInsets.all(10),
       child: Column(
@@ -18,7 +18,19 @@ class Edittext {
           Stack(
             children: [
               TextField(
+                onChanged: onChanged,
                 decoration: InputDecoration(
+                  errorText: validate ? null : 'กรุณากรอก$title',
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide:
+                        BorderSide(width: 3, color: brownDark), //<-- SEE HERE
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide:
+                        BorderSide(width: 3, color: brownDark), //<-- SEE HERE
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide:
@@ -42,7 +54,7 @@ class Edittext {
     );
   }
 
-  static Widget textAreaGeneral(String title, String unit) {
+  static Widget textAreaGeneral(String title, String unit,Function(String)? onChanged,bool validate) {
     return Container(
       margin: const EdgeInsets.all(10),
       child: Column(
@@ -56,8 +68,20 @@ class Edittext {
           Stack(
             children: [
               TextField(
+                onChanged: onChanged,
                 maxLines: 8,
                 decoration: InputDecoration(
+                  errorText: validate ? null : 'กรุณากรอก$title',
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide:
+                        BorderSide(width: 3, color: brownDark), //<-- SEE HERE
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                    borderSide:
+                        BorderSide(width: 3, color: brownDark), //<-- SEE HERE
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide:

@@ -1,9 +1,15 @@
 import 'package:boxseller/Utils/Palette.dart';
+import 'package:boxseller/get/getData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:get/get.dart';
 
+import '../boxInput/boxInput.dart';
+import '../customer/addCustomer.dart';
+import '../model/customer.dart';
 import '../widget/button_app.dart';
+import '../widget/logo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,13 +19,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Customer> listData = [];
+
+ 
   @override
   Widget build(BuildContext context) {
+        await GetData().getDataCustomers().then((value) {
+      listData = value;
+    }).catchError((error) {
+      print('error : $error');
+    });
     return Scaffold(
       body: SafeArea(
           child: Container(
         child: Stack(
-          children: [menu(), detail()],
+          children: [
+            menu(),
+            Container(
+                height: 1000,
+                padding: const EdgeInsets.fromLTRB(350, 100, 350, 0),
+                child: detail())
+          ],
         ),
       )),
     );
@@ -27,17 +47,22 @@ class _HomePageState extends State<HomePage> {
 
   Widget detail() {
     return ListView.builder(
-       // itemCount: titles.length,
-          itemCount: 3,
+        itemCount: listData.length,
         itemBuilder: (context, index) {
+          if (index == 0) {
+            return ButtonApp.buttonMain(context, '+ ลูกค้าใหม่', () {
+              Get.to(const NewCustomer());
+            });
+          }
           return Card(
               child: ListTile(
-                  title: Text('titles[index]'),
-                  subtitle: Text(subtitles[index]),
-                  leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "https://images.unsplash.com/photo-1547721064-da6cfb341d50")),
-                  trailing: Icon(icons[index])));
+            title: Text('titles${listData[index-1].name}'),
+            // subtitle: Text(subtitles[index]),
+            // leading: CircleAvatar(
+            //     backgroundImage: NetworkImage(
+            //         "https://images.unsplash.com/photo-1547721064-da6cfb341d50")),
+            // trailing: Icon(icons[index])
+          ));
         });
   }
 
@@ -48,7 +73,7 @@ class _HomePageState extends State<HomePage> {
       color: greyBorder,
       child: Column(
         children: [
-          logo(),
+          UIkit.logo(),
           ButtonApp.buttonMain(context, 'ประเมินราคา', () {
             //Get.to(const HomePage());
           }),
@@ -59,14 +84,6 @@ class _HomePageState extends State<HomePage> {
             //Get.to(const HomePage());
           }),
         ],
-      ),
-    );
-  }
-
-  Widget logo() {
-    return Flexible(
-      child: Image.asset(
-        'asset/images/logo.png',
       ),
     );
   }

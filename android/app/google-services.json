@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "49905441168",
+    "project_id": "boxseller-2e596",
+    "storage_bucket": "boxseller-2e596.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49905441168:android:97671df0161d7fba287b15",
+        "android_client_info": {
+          "package_name": "com.example.boxseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49905441168-9iqaa13i7c5lsf96rcbi3b1g0g99cmpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMyvpOBW1M6_IpZn_zCWFi_dfzb95DSRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "49905441168-9iqaa13i7c5lsf96rcbi3b1g0g99cmpt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,6 +15,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late String username;
+  late String password;
+
+  bool isValidUsername = false;
+  bool isValidpassword = false;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -54,8 +60,12 @@ class _LoginPageState extends State<LoginPage> {
           width: MediaQuery.of(context).size.width * 0.3,
           child: Column(
             children: [
-              Edittext.edittextGeneral('บัญชีผู้ใช้', ''),
-              Edittext.edittextGeneral('รหัสผ่าน', ''),
+              Edittext.edittextGeneral('บัญชีผู้ใช้', '', (value) {
+                username = value;
+              }, isValidUsername),
+              Edittext.edittextGeneral('รหัสผ่าน', '', (value) {
+                password = value;
+              }, isValidpassword),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.05,
               ),
