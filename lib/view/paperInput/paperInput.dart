@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-import '../widget/text_widget.dart';
+import '../../widget/text_widget.dart';
+
+
 
 class PaperInputPage extends StatefulWidget {
   const PaperInputPage({super.key});

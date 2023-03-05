@@ -1,22 +1,24 @@
-import 'package:boxseller/Utils/Palette.dart';
-import 'package:boxseller/model/customer.dart';
-import 'package:boxseller/model/order.dart';
-import 'package:boxseller/widget/edittext.dart';
-import 'package:boxseller/widget/logo.dart';
-import 'package:boxseller/widget/text_widget.dart';
+import 'package:boxseller/model/vender.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
-import '../widget/button_app.dart';
+import '../../Utils/Palette.dart';
+import '../../model/customer.dart';
+import '../../widget/button_app.dart';
+import '../../widget/edittext.dart';
+import '../../widget/logo.dart';
+import '../../widget/text_widget.dart';
 
-class NewCustomer extends StatefulWidget {
-  const NewCustomer({super.key});
+class NewVender extends StatefulWidget {
+  const NewVender({super.key});
 
   @override
-  State<NewCustomer> createState() => _NewCustomerState();
+  State<NewVender> createState() => _NewVenderState();
 }
 
-class _NewCustomerState extends State<NewCustomer> {
+class _NewVenderState extends State<NewVender> {
   String name = '';
   String tel = '';
   String address = '';
@@ -46,12 +48,14 @@ class _NewCustomerState extends State<NewCustomer> {
                   children: [
                     header(),
                     customerForm(),
-                    ButtonApp.buttonMain(context, 'เพิ่มลูกค้าใหม่',
-                        () {
+                    ButtonApp.buttonMain(context, 'เพิ่ม vender ใหม่', () {
                       if (name != '' && tel != '' && address != '') {
-                        Customer newCustomer =
-                            Customer(name: name, tel: tel, address: address);
-                        newCustomer.newCustomer();
+                        Vender newVender = Vender(
+                            name: name,
+                            tel: tel,
+                            address: address);
+                        newVender.newVender();
+                        Navigator.pop(context, true);
                       } else {
                         if (name == '') {
                           setState(() {
@@ -63,7 +67,7 @@ class _NewCustomerState extends State<NewCustomer> {
                             isValidTel = false;
                           });
                         }
-                         if (address == '') {
+                        if (address == '') {
                           setState(() {
                             isValidAddress = false;
                           });
@@ -97,8 +101,13 @@ class _NewCustomerState extends State<NewCustomer> {
   }
 
   Widget header() {
-    return TextWidget.textGeneral('รายการสั่งผลิตใหม่');
+    return TextWidget.textGeneral('เพิ่ม Vender ใหม่');
   }
+
+  var nameController = TextEditingController();
+  var telController = TextEditingController();
+  var addressController = TextEditingController();
+  var deliverInDaysController = TextEditingController();
 
   Widget customerForm() {
     return Column(
@@ -106,18 +115,18 @@ class _NewCustomerState extends State<NewCustomer> {
       children: [
         Row(
           children: [
-            TextWidget.textGeneral('ข้อมูลลูกค้า'),
+            TextWidget.textGeneral('ข้อมูล Vender'),
           ],
         ),
-        Edittext.edittextGeneral('ชื่อลูกค้า', '', (value) {
+        Edittext.edittextGeneral('ชื่อ Vender', '', (value) {
           name = value;
-        }, isValidName),
+        }, isValidName, nameController),
         Edittext.edittextGeneral('เบอร์โทรศัพท์', '', (value) {
           tel = value;
-        }, isValidTel),
+        }, isValidTel, telController),
         Edittext.textAreaGeneral('ที่อยู่', '', (value) {
           address = value;
-        }, isValidAddress),
+        }, isValidAddress, addressController),
       ],
     );
   }

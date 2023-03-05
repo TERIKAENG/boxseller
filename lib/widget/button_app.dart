@@ -29,13 +29,13 @@ class ButtonApp {
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-              color: Colors.transparent,
+              color: Colors.white,
               border: Border.all(
-                color: Colors.transparent,
+                color: Colors.white,
               ),
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Center(
-              child: TextWidget.textGeneralWithColor(title, blueSelected)),
+              child: TextWidget.textGeneralWithColor(title, brownDark)),
         ));
   }
 

@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Utils/Palette.dart';
+import '../../get/algorithm.dart';
+import '../../widget/button_app.dart';
+import '../../widget/edittext.dart';
 import '../Home/homepage.dart';
-import '../Utils/Palette.dart';
-import '../widget/button_app.dart';
-import '../widget/edittext.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,6 +51,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  var usernameController = TextEditingController();
+  var passwordController = TextEditingController();
+
   Widget loginForm() {
     return Column(
       children: [
@@ -62,10 +66,10 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Edittext.edittextGeneral('บัญชีผู้ใช้', '', (value) {
                 username = value;
-              }, isValidUsername),
+              }, isValidUsername, usernameController),
               Edittext.edittextGeneral('รหัสผ่าน', '', (value) {
                 password = value;
-              }, isValidpassword),
+              }, isValidpassword, passwordController),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.05,
               ),
