@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:boxseller/model/calculateMat.dart';
+import 'package:boxseller/model/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BoxOrder {
@@ -27,6 +29,8 @@ class BoxOrder {
   String customer;
   String? ronType;
   Object? material;
+
+  List<MaterialPaper>? materialCalculate = [];
   
   BoxOrder({
     this.id,
@@ -85,6 +89,7 @@ class BoxOrder {
           'status': status,
           'paper': paper,
           'customer': customer,
+          'materialCalcualate' :materialCalculate
 
         })
         .then((value) => print("Order Added"))

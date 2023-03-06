@@ -52,7 +52,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
                     boxForm(),
                     lineSep(),
                     decoForm(),
-                    ButtonApp.buttonMain(context, 'คำนวราคาเเละวัตถุดิบกระดาษ',
+                    ButtonApp.buttonMain(context, 'คำนวณราคาเเละวัตถุดิบกระดาษ',
                         () async {
                       bool valid = true;
                       if (productnameController.text == '') {
@@ -129,10 +129,12 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         newOrder.ronType = findRon;
 
                         newOrder = Algorithm.calculateTemplate(newOrder);
-                        Algorithm.findVenderPaper(newOrder);
+                        Algorithm.findVenderPaper(newOrder).then((value) {
+                          newOrder = value;
+                        });
 
-                        // newOrder.newOrder();
-                        // Navigator.pop(context, true);
+                        newOrder.newOrder();
+                        Navigator.pop(context, true);
                       }
                     }),
                   ],
@@ -289,7 +291,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
           children: [
             RadioListTile(
               activeColor: brownDark,
-              title: Text("มี"),
+              title: const Text("ใช่"),
               value: 1,
               groupValue: deliver,
               onChanged: (value) {
@@ -300,7 +302,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
             ),
             RadioListTile(
               activeColor: brownDark,
-              title: Text("ไม่มี"),
+              title: const Text("ไม่ใช่"),
               value: 0,
               groupValue: deliver,
               onChanged: (value) {
@@ -339,7 +341,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
             ),
             RadioListTile(
               activeColor: brownDark,
-              title: Text("เล็กน้อย"),
+              title: Text("ชื้นเล็กน้อย"),
               value: 1,
               groupValue: moistureProduct,
               onChanged: (value) {
@@ -371,7 +373,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
       children: [
         Row(
           children: [
-            TextWidget.textSubTitle('บรรจุภัณฑ์ต้องผ่านกระบวนการจัดส่ง'),
+            TextWidget.textSubTitle('คลังที่จัดเก็บมีความชื้นหรือไม่'),
           ],
         ),
         Column(

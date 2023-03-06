@@ -60,7 +60,7 @@ class Algorithm {
     return box;
   }
 
-  static Future<void> findVenderPaper(BoxOrder box) async {
+  static Future<BoxOrder> findVenderPaper(BoxOrder box) async {
     List<MaterialPaper> materials = [];
     await GetData()
         .getDataMaterialsBySpec(box.paper, box.ronType!)
@@ -82,16 +82,18 @@ class Algorithm {
           calculatePricePerBox(element.calculateMat!, element, box);
     }
 
-    // dynamic max;
+    // MaterialPaper min;
     // if (materials.isNotEmpty) {
-    //   dynamic max = materials.first;
+    //   min = materials.first;
     //   for (var e in materials) {
-    //     if (e[]['countbox'] > max['countbox']) max = e;
+    //     if (e.calculateMat!.pricePerBox < min.calculateMat!.pricePerBox) {
+    //       min = e;
+    //     }
     //   }
-    //   print(max.toString());
+    //   box.calculatedata = min;
     // }
-
-    // return max;
+    box.materialCalculate = materials;
+    return box;
   }
 
   static dynamic compareBoxPerMaterial(double boxTemplateWidth,
@@ -156,7 +158,6 @@ class Algorithm {
       lgHeight = lgHeight - smHeight;
     }
 
-    print('smWidth $smWidth == lgHeight $lgHeight');
     while (smWidth < lgHeight) {
       var amount2 = lgWidth ~/ smHeight;
       rotatePerRow = amount2;
