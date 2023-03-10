@@ -20,6 +20,10 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail> {
+  bool tab1 = true;
+  bool tab2 = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -39,30 +43,50 @@ class _OrderDetailState extends State<OrderDetail> {
                       height: 20,
                     ),
                     TextWidget.textGeneralWithColor('ข้อมูลออเดอร์', brownDark),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ButtonApp.buttonFixSized(context, ' ข้อมูลทั่วไป ',
+                                () async {
+                              // var res = await Get.to(MeaterialInput(
+                              //   vender: widget.vender,
+                              // ));
+                              // if (res) {
+                              setState(() {
+                                tab1 = true;
+                                tab2 = false;
+                              });
+                              // }
+                            }, tab1),
+                            ButtonApp.buttonFixSized(
+                                context, ' วัตถุดิบกระดาษ ', () async {
+                              // var res = await Get.to(MeaterialInput(
+                              //   vender: widget.vender,
+                              // ));
+                              // if (res) {
+                              setState(() {
+                                tab1 = false;
+                                tab2 = true;
+                              });
+                              // }
+                            }, tab2),
+                          ]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Card(
                         child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          Row(children: [
-                            ButtonApp.buttonMain(
-                                context, ' + วัตถุดิบกระดาษใหม่ ', () async {
-                              // var res = await Get.to(MeaterialInput(
-                              //   vender: widget.vender,
-                              // ));
-                              // if (res) {
-                              //   setState(() {});
-                              // }
-                            }),
-                          ]),
-                          ListTile(
-                            title: Text('ออเดอร์ : ${widget.order.name}'),
-                            trailing: const Icon(
-                              Icons.house_outlined,
-                              color: Colors.brown,
-                              size: 36.0,
-                            ),
-                          ),
+                          TextWidget.textGeneralWithColor(
+                              'ข้อมูลผลิตภัณฑ์', brownDark),
                           Row(
                             children: [
                               TextWidget.textGeneralWithColor(
@@ -259,4 +283,8 @@ class _OrderDetailState extends State<OrderDetail> {
       )),
     );
   }
+
+
+
+
 }

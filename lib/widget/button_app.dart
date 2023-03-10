@@ -34,8 +34,8 @@ class ButtonApp {
                 color: Colors.white,
               ),
               borderRadius: const BorderRadius.all(Radius.circular(10))),
-          child: Center(
-              child: TextWidget.textGeneralWithColor(title, brownDark)),
+          child:
+              Center(child: TextWidget.textGeneralWithColor(title, brownDark)),
         ));
   }
 
@@ -109,5 +109,26 @@ class ButtonApp {
                             )),
                       ]))),
             ]));
+  }
+
+  static Widget buttonFixSized(BuildContext context, String title,
+      GestureTapCallback onPressed, bool tab) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.3,
+      child: TextButton(
+          onPressed: onPressed,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+                color: tab ? brownlight : brownDark,
+                border: Border.all(
+                  color: tab ? brownlight : brownDark,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
+            child: Center(
+                child: TextWidget.textGeneralWithColor(title, Colors.white)),
+          )),
+    );
   }
 }
