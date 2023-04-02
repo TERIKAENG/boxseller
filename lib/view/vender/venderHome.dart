@@ -12,6 +12,7 @@ import '../../widget/button_app.dart';
 import '../../widget/logo.dart';
 import '../../widget/text_widget.dart';
 import '../Home/homepage.dart';
+import '../Home/homepage_temp.dart';
 import 'materialInput.dart';
 
 
@@ -140,7 +141,7 @@ class _VenderHomeState extends State<VenderHome> {
               Navigator.pushReplacement(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => const HomePage(),
+                pageBuilder: (context, animation1, animation2) =>  HomePage(),
                 transitionDuration: Duration.zero,
                 reverseTransitionDuration: Duration.zero,
               ),
