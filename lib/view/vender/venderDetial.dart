@@ -102,11 +102,12 @@ class _VenderDetailState extends State<VenderDetail> {
                   // ));
                 },
                 child: Card(
+                  
                     child: ListTile(
                   title: Text(
                       '${snapshot.data![index].layer1} ${snapshot.data![index].layer2} ${snapshot.data![index].layer3} ${snapshot.data![index].layer4} ${snapshot.data![index].layer5}'),
                   subtitle:
-                      Text('วัตถุดิบกระดาษ : ${snapshot.data![index].id}'),
+                      Text('วัตถุดิบกระดาษ ขนาด : ${snapshot.data![index].widthPaper} x ${snapshot.data![index].heightPaper} ราคา ${snapshot.data![index].pricePaper} บาท'),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.brown,

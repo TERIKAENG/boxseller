@@ -1,4 +1,5 @@
 import 'package:boxseller/Utils/Palette.dart';
+import 'package:boxseller/model/calculateMat.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/src/widgets/container.dart';
@@ -25,6 +26,8 @@ class MeaterialInput extends StatefulWidget {
 }
 
 class _MeaterialInputState extends State<MeaterialInput> {
+  late String _selectedUnit = 'cm';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +96,17 @@ class _MeaterialInputState extends State<MeaterialInput> {
                         });
                       }
 
+                      if (_selectedUnit == 'cm') {
+                        width = width * 10;
+                        height = height * 10;
+                      } else if (_selectedUnit == 'm') {
+                        width = width * 1000;
+                        height = height * 1000;
+                      } else if (_selectedUnit == 'inch') {
+                        width = width * 25.4;
+                        height = height * 25.4;
+                      }
+
                       if (valid) {
                         MaterialPaper newMaterial = MaterialPaper(
                             deliverIndays: deliverIndays,
@@ -103,13 +117,19 @@ class _MeaterialInputState extends State<MeaterialInput> {
                             layer4: layer4,
                             layer5: layer5,
                             minimumPaper: minimum,
-                            paperType: '',
+                            paperType: paper,
                             pricePaper: price,
-                            ronType: '',
+                            ronType: ron,
                             vender: widget.vender.id!,
-                            widthPaper: width);
+                            venderName: widget.vender.name,
+                            widthPaper: width,
+                            calculateMat: CalculateMat(
+                                pricePerBox: 0,
+                                paperAmount: 0,
+                                boxAmount: 0,
+                                costNet: 0, bestestTemplate: {}));
 
-                        newMaterial.newMaterial();
+                        await newMaterial.newMaterial();
                         Navigator.pop(context, true);
                       }
                     }),
@@ -183,6 +203,8 @@ class _MeaterialInputState extends State<MeaterialInput> {
   bool deliverIndaysValidator = true;
   TextEditingController deliverIndaysController = TextEditingController();
 
+  String ron = '';
+
   Widget productForm() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -193,6 +215,7 @@ class _MeaterialInputState extends State<MeaterialInput> {
           ],
         ),
         paperType(),
+        ronType(),
         Edittext.edittextGeneral('กระดาษชั้นที่ 1', '', (value) {
           layer1 = value;
         }, layer1Validator, layer1Controller),
@@ -202,12 +225,16 @@ class _MeaterialInputState extends State<MeaterialInput> {
         Edittext.edittextGeneral('กระดาษชั้นที่ 3', '', (value) {
           layer3 = value;
         }, layer3Validator, layer3Controller),
-        Edittext.edittextGeneral('กระดาษชั้นที่ 4', '', (value) {
-          layer4 = value;
-        }, layer4Validator, layer4Controller),
-        Edittext.edittextGeneral('กระดาษชั้นที่ 5', '', (value) {
-          layer5 = value;
-        }, layer5Validator, layer5Controller),
+        ron == 'BC'
+            ? Edittext.edittextGeneral('กระดาษชั้นที่ 4', '', (value) {
+                layer4 = value;
+              }, layer4Validator, layer4Controller)
+            : Container(),
+        ron == 'BC'
+            ? Edittext.edittextGeneral('กระดาษชั้นที่ 5', '', (value) {
+                layer5 = value;
+              }, layer5Validator, layer5Controller)
+            : Container(),
         const SizedBox(
           height: 20,
         ),
@@ -216,19 +243,46 @@ class _MeaterialInputState extends State<MeaterialInput> {
             TextWidget.textSubTitle('ขนาดของวัตถุดิบกระดาษ'),
           ],
         ),
+        Row(
+          children: [
+            TextWidget.textSubTitle('หน่วย : ขนาดของวัตถุดิบกระดาษ'),
+            const SizedBox(
+              width: 20,
+            ),
+            DropdownButton(
+              hint: const Text('เลือกหน่วย'),
+              value: _selectedUnit,
+              onChanged: (value) {
+                setState(() {
+                  _selectedUnit = value.toString();
+                });
+              },
+              items: [
+                const DropdownMenuItem(
+                  value: 'cm',
+                  child: Text('เซนติเมตร'),
+                ),
+                const DropdownMenuItem(
+                  value: 'inch',
+                  child: Text('นิ้ว'),
+                ),
+                const DropdownMenuItem(
+                  value: 'm',
+                  child: Text('เมตร'),
+                ),
+              ],
+            ),
+          ],
+        ),
         Edittext.edittextNumber('ความกว้างของวัตถุดิบกระดาษ', '', (value) {
           try {
             width = double.parse(value);
-          } catch (e) {
-            widthController.text = '0';
-          }
+          } catch (e) {}
         }, widthValidator, widthController),
         Edittext.edittextNumber('ความยาวของวัตถุดิบกระดาษ', '', (value) {
           try {
             height = double.parse(value);
-          } catch (e) {
-            heightController.text = '0';
-          }
+          } catch (e) {}
         }, heightValidator, heightController),
         const SizedBox(
           height: 20,
@@ -238,26 +292,20 @@ class _MeaterialInputState extends State<MeaterialInput> {
             TextWidget.textSubTitle('ข้อมูลวัตถุดิบกระดาษ'),
           ],
         ),
-        Edittext.edittextNumber('ราคาต่อแผ่น', '', (value) {
+        Edittext.edittextNumber('ราคาต่อแผ่น', 'บาท', (value) {
           try {
             price = double.parse(value);
-          } catch (e) {
-            priceController.text = '0';
-          }
+          } catch (e) {}
         }, priceValidator, priceController),
         Edittext.edittextNumber('ขั้นต่ำในการสั่ง', 'แผ่น', (value) {
           try {
             minimum = int.parse(value);
-          } catch (e) {
-            minimumController.text = '0';
-          }
+          } catch (e) {}
         }, minimumValidator, minimumController),
         Edittext.edittextNumber('จัดส่งภายใน', 'วัน', (value) {
           try {
             deliverIndays = int.parse(value);
-          } catch (e) {
-            deliverIndaysController.text = '0';
-          }
+          } catch (e) {}
         }, deliverIndaysValidator, deliverIndaysController),
       ],
     );
@@ -326,6 +374,66 @@ class _MeaterialInputState extends State<MeaterialInput> {
               onChanged: (value) {
                 setState(() {
                   paper = value.toString();
+                });
+              },
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget ronType() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            TextWidget.textSubTitle('ลอนกระดาษ'),
+          ],
+        ),
+        Column(
+          children: [
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("E"),
+              value: "E",
+              groupValue: ron,
+              onChanged: (value) {
+                setState(() {
+                  ron = value.toString();
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("B"),
+              value: "B",
+              groupValue: ron,
+              onChanged: (value) {
+                setState(() {
+                  ron = value.toString();
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("C"),
+              value: "C",
+              groupValue: ron,
+              onChanged: (value) {
+                setState(() {
+                  ron = value.toString();
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("BC"),
+              value: "BC",
+              groupValue: ron,
+              onChanged: (value) {
+                setState(() {
+                  ron = value.toString();
                 });
               },
             ),

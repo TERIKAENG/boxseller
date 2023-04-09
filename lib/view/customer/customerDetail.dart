@@ -111,7 +111,7 @@ class _CustomerDetailState extends State<CustomerDetail> {
                 child: Card(
                     child: ListTile(
                   title: Text('ออเดอร์ : ${snapshot.data![index].id}'),
-                  subtitle: Text(snapshot.data![index].name),
+                  subtitle: Text("${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง"),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.brown,

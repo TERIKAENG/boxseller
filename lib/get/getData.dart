@@ -18,10 +18,9 @@ class GetData {
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(allData);
+
 
     for (int i = 0; i < allData.length; i++) {
-      print(allData[i].toString());
       var newjson = json.encode(allData[i]);
       Customer newCustomer = Customer.fromJson(newjson);
       newCustomer.id = querySnapshot.docs[i].id;
@@ -64,12 +63,12 @@ class GetData {
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    //  print(allData);
-
     for (int i = 0; i < allData.length; i++) {
-      // print(allData[i].toString());
+      print(allData[i]);
       var newjson = json.encode(allData[i]);
+
       BoxOrder newOrder = BoxOrder.fromJson(newjson);
+      print(newOrder.toString());
       if (newOrder.customer == customerId) {
         newOrder.id = querySnapshot.docs[i].id;
         list.add(newOrder);
@@ -79,10 +78,10 @@ class GetData {
     return list;
   }
 
-    CollectionReference materials = FirebaseFirestore.instance.collection('materials');
+  CollectionReference materials =
+      FirebaseFirestore.instance.collection('materials');
 
   Future<List<MaterialPaper>> getDataMaterialsByVender(String venderId) async {
- 
     // Get docs from collection reference
     List<MaterialPaper> list = [];
     QuerySnapshot querySnapshot = await materials.get();
@@ -92,9 +91,9 @@ class GetData {
     print(allData);
 
     for (int i = 0; i < allData.length; i++) {
-      // print(allData[i].toString());
-      var newjson = json.encode(allData[i]);
-      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson);
+      String newjson = json.encode(allData[i]);
+      //print(newjson);
+      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson,0);
       if (newMaterial.vender == venderId) {
         newMaterial.id = querySnapshot.docs[i].id;
         list.add(newMaterial);
@@ -104,9 +103,8 @@ class GetData {
     return list;
   }
 
-
-  Future<List<MaterialPaper>> getDataMaterialsBySpec(String paperType,String ronType) async {
- 
+  Future<List<MaterialPaper>> getDataMaterialsBySpec(
+      String paperType, String ronType) async {
     // Get docs from collection reference
     List<MaterialPaper> list = [];
     QuerySnapshot querySnapshot = await materials.get();
@@ -118,8 +116,9 @@ class GetData {
     for (int i = 0; i < allData.length; i++) {
       // print(allData[i].toString());
       var newjson = json.encode(allData[i]);
-      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson);
-      if (newMaterial.paperType == paperType && newMaterial.ronType == ronType) {
+      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson,1);
+      if (newMaterial.paperType == paperType &&
+          newMaterial.ronType == ronType) {
         newMaterial.id = querySnapshot.docs[i].id;
         list.add(newMaterial);
       }

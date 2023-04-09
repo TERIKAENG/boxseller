@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:boxseller/get/getData.dart';
@@ -49,10 +50,10 @@ class Algorithm {
 
     if (box.ronType == 'BC') {
       widthCal = ((((box.widthBox - 3) / 2) + 2) * 2) + box.heightBox;
-      heightCal = (box.widthBox - 3) + (box.longBox * 2) + box.widthBox;
+      heightCal = (box.widthBox - 3) + (box.longBox * 2) + box.widthBox + 30;
     } else {
       widthCal = ((((box.widthBox - 2) / 2) + 2) * 2) + box.heightBox;
-      heightCal = (box.widthBox - 2) + (box.longBox * 2) + box.widthBox;
+      heightCal = (box.widthBox - 2) + (box.longBox * 2) + box.widthBox + 26;
     }
 
     box.widthTemplate = widthCal;
@@ -62,36 +63,29 @@ class Algorithm {
 
   static Future<BoxOrder> findVenderPaper(BoxOrder box) async {
     List<MaterialPaper> materials = [];
+
     await GetData()
         .getDataMaterialsBySpec(box.paper, box.ronType!)
         .then((value) {
       materials = value;
     }).catchError((error) {
-      print('ERROR fetch material');
+      print('ERROR fetch material 2333 : $error');
     });
 
-    for (var element in materials) {
+    for (int i = 0; i < materials.length; i++) {
       var result = compareBoxPerMaterial(box.widthTemplate, box.heightTemplate,
-          element.widthPaper, element.heightPaper);
-      element.calculateMat?.bestestTemplate = result;
-      element.calculateMat?.paperAmount = getAmountOrder(
-          element.minimumPaper, box.orderAmount, element.calculateMat!);
-      element.calculateMat?.boxAmount =
-          calculateBoxAmount(element.calculateMat!);
-      element.calculateMat?.pricePerBox =
-          calculatePricePerBox(element.calculateMat!, element, box);
+          materials[i].widthPaper, materials[i].heightPaper);
+      materials[i].calculateMat.bestestTemplate = result;
+      materials[i].calculateMat.paperAmount = getAmountOrder(
+          materials[i].minimumPaper,
+          box.orderAmount,
+          materials[i].calculateMat);
+      materials[i].calculateMat.boxAmount =
+          calculateBoxAmount(materials[i].calculateMat);
+      materials[i].calculateMat.pricePerBox =
+          calculatePricePerBox(materials[i].calculateMat, materials[i], box);
     }
 
-    // MaterialPaper min;
-    // if (materials.isNotEmpty) {
-    //   min = materials.first;
-    //   for (var e in materials) {
-    //     if (e.calculateMat!.pricePerBox < min.calculateMat!.pricePerBox) {
-    //       min = e;
-    //     }
-    //   }
-    //   box.calculatedata = min;
-    // }
     box.materialCalculate = materials;
     return box;
   }
@@ -133,7 +127,7 @@ class Algorithm {
 
     dynamic max;
     if (lst.isNotEmpty) {
-      dynamic max = lst.first;
+      max = lst.first;
       for (var e in lst) {
         if (e['countbox'] > max['countbox']) max = e;
       }

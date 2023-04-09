@@ -26,6 +26,7 @@ class BoxInputPage extends StatefulWidget {
 class _BoxInputPageState extends State<BoxInputPage> {
   String productName = '';
   double productWeight = 0;
+  late String _selectedUnit = 'cm';
 
   @override
   Widget build(BuildContext context) {
@@ -101,37 +102,60 @@ class _BoxInputPageState extends State<BoxInputPage> {
                           valid = false;
                         });
                       }
+
+                      if (_selectedUnit == 'cm') {
+                        widthBox = widthBox * 10;
+                        heightBox = heightBox * 10;
+                        longBox = longBox * 10;
+                      } else if (_selectedUnit == 'm') {
+                        widthBox = widthBox * 1000;
+                        heightBox = heightBox * 1000;
+                        longBox = longBox * 1000;
+                      } else if (_selectedUnit == 'inch') {
+                        widthBox = widthBox * 25.4;
+                        heightBox = heightBox * 25.4;
+                        longBox = longBox * 25.4;
+                      }
+
                       if (valid) {
                         BoxOrder newOrder = BoxOrder(
-                            name: productName,
-                            weightProduct: productWeight,
-                            widthBox: widthBox,
-                            longBox: longBox,
-                            heightBox: heightBox,
-                            unit: 1,
-                            orderAmount: amountOrder,
-                            isHumidityProduct: moistureProduct,
-                            isHumidityWarehouse: moistureWarehouse,
-                            amount_stack_warehouse: isStack,
-                            useDesignService: deco,
-                            isSharpPrint: concernIn,
-                            isUseColorOver: isOverColor,
-                            artwork: 'artwork',
-                            isDeliveryProduct: deliver,
-                            widthTemplate: 0,
-                            heightTemplate: 0,
-                            empId: 'admin',
-                            status: 'true',
-                            paper: paper,
-                            customer: widget.customer.id!);
+                          name: productName,
+                          weightProduct: productWeight,
+                          widthBox: widthBox,
+                          longBox: longBox,
+                          heightBox: heightBox,
+                          unit: 1,
+                          orderAmount: amountOrder,
+                          isHumidityProduct: moistureProduct,
+                          isHumidityWarehouse: moistureWarehouse,
+                          amount_stack_warehouse: isStack,
+                          useDesignService: deco,
+                          isSharpPrint: concernIn,
+                          isUseColorOver: isOverColor,
+                          artwork: 'artwork',
+                          isDeliveryProduct: deliver,
+                          widthTemplate: 0,
+                          heightTemplate: 0,
+                          empId: 'admin',
+                          status: 'true',
+                          paper: paper,
+                          customer: widget.customer.id!,
+                          // timestamp: DateTime.now()
+                        );
 
                         var findRon = Algorithm.findPapertype(newOrder);
                         newOrder.ronType = findRon;
 
                         newOrder = Algorithm.calculateTemplate(newOrder);
-                        Algorithm.findVenderPaper(newOrder).then((value) {
+                        await Algorithm.findVenderPaper(newOrder).then((value) {
+                        
                           newOrder = value;
+        
+                        }).catchError((error) {
+                          print('ERROR : $error');
                         });
+          
+                        print(newOrder);
 
                         newOrder.newOrder();
                         Navigator.pop(context, true);
@@ -185,11 +209,11 @@ class _BoxInputPageState extends State<BoxInputPage> {
         Edittext.edittextGeneral('ชื่อผลิตภัณฑ์', '', (value) {
           productName = value;
         }, productnameValidator, productnameController),
-        Edittext.edittextNumber('น้ำหนักของผลิตภัณฑ์', '', (value) {
+        Edittext.edittextNumber('น้ำหนักของผลิตภัณฑ์', 'กิโลกรัม', (value) {
           try {
             productWeight = double.parse(value);
           } catch (e) {
-            productWieghtController.text = '0';
+            print('input error');
           }
         }, productWeightValidator, productWieghtController),
         // Edittext.edittextGeneral('หน่วย', ''),
@@ -222,29 +246,65 @@ class _BoxInputPageState extends State<BoxInputPage> {
     return Column(
       children: [
         TextWidget.textGeneral('ข้อมูลบรรจุภัณฑ์ที่ต้องการสั่งผลิต'),
-        Edittext.edittextGeneral('จำนวนที่ต้องการสั่งผลิต (ชิ้น)', '', (value) {
+        Edittext.edittextNumber('จำนวนที่ต้องการสั่งผลิต', 'กล่อง', (value) {
           try {
             amountOrder = int.parse(value);
           } catch (e) {
-            amountOrderController.text = '0';
+            //amountOrderController.text = '0';
           }
         }, amountOrderValidator, amountOrderController),
         paperType(),
-        Edittext.edittextGeneral('กว้าง', ',มิลลิเมตร', (value) {
+        Row(
+          children: [
+            TextWidget.textSubTitle('ขนาดของวัตถุดิบกระดาษ'),
+          ],
+        ),
+        Row(
+          children: [
+            TextWidget.textSubTitle('หน่วย : ขนาดของวัตถุดิบกระดาษ'),
+            const SizedBox(
+              width: 20,
+            ),
+            DropdownButton(
+              hint: const Text('เลือกหน่วย'),
+              value: _selectedUnit,
+              onChanged: (value) {
+                setState(() {
+                  _selectedUnit = value.toString();
+                });
+              },
+              items: [
+                const DropdownMenuItem(
+                  value: 'cm',
+                  child: Text('เซนติเมตร'),
+                ),
+                const DropdownMenuItem(
+                  value: 'inch',
+                  child: Text('นิ้ว'),
+                ),
+                const DropdownMenuItem(
+                  value: 'm',
+                  child: Text('เมตร'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        Edittext.edittextGeneral('กว้าง', '', (value) {
           try {
             widthBox = double.parse(value);
           } catch (e) {
             widthBoxController.text = '0';
           }
         }, widthBoxValidator, widthBoxController),
-        Edittext.edittextGeneral('ยาว', 'มิลลิเมตร', (value) {
+        Edittext.edittextGeneral('ยาว', '', (value) {
           try {
             longBox = double.parse(value);
           } catch (e) {
             longBoxController.text = '0';
           }
         }, longBoxValidator, longBoxController),
-        Edittext.edittextGeneral('สูง', 'มิลลิเมตร', (value) {
+        Edittext.edittextGeneral('สูง', '', (value) {
           try {
             heightBox = double.parse(value);
           } catch (e) {

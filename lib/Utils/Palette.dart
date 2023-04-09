@@ -18,5 +18,5 @@ Color yellowHeader = const Color(0xFFFFEC44);
 Color greenValue = const Color(0xFF16D39B);
 Color greenBG = const Color(0xFFf6FDFD);
 
-Color brownDark = const Color(0xFF956137);
-Color brownlight = const Color(0xFFCA9E6D);
+Color brownDark = const Color.fromARGB(255, 76, 60, 55);
+Color brownlight = const Color.fromARGB(255, 76, 60, 55);
