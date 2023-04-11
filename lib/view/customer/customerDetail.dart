@@ -70,7 +70,7 @@ class _CustomerDetailState extends State<CustomerDetail> {
                         }
                       }),
                       Container(
-                          height: MediaQuery.of(context).size.height * 0.5,
+                          height: MediaQuery.of(context).size.height * 0.7,
                           width: MediaQuery.of(context).size.width * 0.6,
                           padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
                           child: detail()),

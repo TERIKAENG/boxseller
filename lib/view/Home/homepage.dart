@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             title: Text('วัตถุดิบกระดาษ'),
-            leading: Icon(Icons.report),
+            leading: Icon(Icons.account_tree_rounded),
             onTap: () {
               setState(() {
                 showWideget = VendorList();
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             title: Text('รายการสั่งผลิต'),
-            leading: Icon(Icons.report),
+            leading: Icon(Icons.add_business_sharp),
             onTap: () {
               setState(() {
                 showWideget = VendorList();

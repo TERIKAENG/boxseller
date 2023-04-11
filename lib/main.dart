@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:path_provider/path_provider.dart';
 
 //   await Firebase.initializeApp(
 //     options: DefaultFirebaseOptions.currentPlatform,
@@ -12,6 +13,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+ // initialize path_provider
   runApp(const MyApp());
 }
 

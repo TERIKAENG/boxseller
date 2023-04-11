@@ -8,19 +8,19 @@ import '../../model/customer.dart';
 import '../customer/addCustomer.dart';
 import '../customer/customerDetail.dart';
 
-class SaleOrderPage extends StatefulWidget {
-  const SaleOrderPage({super.key});
+class ProducePage extends StatefulWidget {
+  const ProducePage({super.key});
 
   @override
-  State<SaleOrderPage> createState() => _SaleOrderPageState();
+  State<ProducePage> createState() => _ProducePageState();
 }
 
-class _SaleOrderPageState extends State<SaleOrderPage> {
+class _ProducePageState extends State<ProducePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายการประเมินราคา'),
+        title: Text('รายการการผลิต'),
         automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 160, 133, 105),
       ),

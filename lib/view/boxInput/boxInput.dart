@@ -137,9 +137,12 @@ class _BoxInputPageState extends State<BoxInputPage> {
                           widthTemplate: 0,
                           heightTemplate: 0,
                           empId: 'admin',
-                          status: 'true',
+                          status: 'estimate',
                           paper: paper,
                           customer: widget.customer.id!,
+                          customerAddress: widget.customer.address,
+                          customerName: widget.customer.name,
+                          customerTel: widget.customer.tel,
                           // timestamp: DateTime.now()
                         );
 
@@ -148,13 +151,11 @@ class _BoxInputPageState extends State<BoxInputPage> {
 
                         newOrder = Algorithm.calculateTemplate(newOrder);
                         await Algorithm.findVenderPaper(newOrder).then((value) {
-                        
                           newOrder = value;
-        
                         }).catchError((error) {
                           print('ERROR : $error');
                         });
-          
+
                         print(newOrder);
 
                         newOrder.newOrder();

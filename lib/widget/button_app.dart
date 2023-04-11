@@ -21,6 +21,24 @@ class ButtonApp {
         ));
   }
 
+   static Widget buttonMainNext(
+      BuildContext context, String title, GestureTapCallback onPressed) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+              color: Colors.green,
+              border: Border.all(
+                color: Colors.green,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Center(
+              child: TextWidget.textGeneralWithColor(title, Colors.white)),
+        ));
+  }
+
   static Widget buttonSecondary(
       BuildContext context, String title, GestureTapCallback onPressed) {
     return TextButton(

@@ -8,6 +8,7 @@ import '../model/order.dart';
 import '../model/vender.dart';
 
 class GetData {
+
   CollectionReference customers =
       FirebaseFirestore.instance.collection('customers');
 
@@ -28,6 +29,26 @@ class GetData {
     }
 
     return list;
+  }
+
+    Future<Customer> getDataCustomerByID(String id) async {
+    // Get docs from collection reference
+    List<Customer> list = [];
+    QuerySnapshot querySnapshot = await customers.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+
+    for (int i = 0; i < allData.length; i++) {
+      var newjson = json.encode(allData[i]);
+      Customer newCustomer = Customer.fromJson(newjson);
+      newCustomer.id = querySnapshot.docs[i].id;
+        if('${newCustomer.id}' == id){
+            return newCustomer;
+        }
+    }
+    return Customer(name: '', tel: '', address: '');
   }
 
   CollectionReference venders =
@@ -116,7 +137,7 @@ class GetData {
     for (int i = 0; i < allData.length; i++) {
       // print(allData[i].toString());
       var newjson = json.encode(allData[i]);
-      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson,1);
+      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson,0);
       if (newMaterial.paperType == paperType &&
           newMaterial.ronType == ronType) {
         newMaterial.id = querySnapshot.docs[i].id;
