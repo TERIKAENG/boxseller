@@ -1,20 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:convert';
+import 'dart:html' as html;
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:boxseller/get/getData.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import 'package:boxseller/Utils/Palette.dart';
+import 'package:boxseller/get/getData.dart';
 import 'package:boxseller/model/calculateMat.dart';
 import 'package:boxseller/model/material.dart';
 
@@ -23,9 +24,6 @@ import '../../model/customer.dart';
 import '../../model/order.dart';
 import '../../widget/button_app.dart';
 import '../../widget/text_widget.dart';
-
-import 'dart:convert';
-import 'dart:html' as html;
 
 class OrderDetail extends StatefulWidget {
   final BoxOrder order;
@@ -146,7 +144,10 @@ class _IngredientListState extends State<IngredientList>
             listPaper: widget.boxOrder.materialCalculate!,
             boxOrder: widget.boxOrder,
           ),
-          Tab2(),
+          Tab2(
+            listPaper: widget.boxOrder.materialCalculate!,
+            boxOrder: widget.boxOrder,
+          ),
         ],
       ),
 
@@ -184,154 +185,160 @@ class _Tab1State extends State<Tab1> {
     return Container(
         margin: const EdgeInsets.all(10.0),
         padding: const EdgeInsets.all(10.0),
-        child: displayList.length > 0 ? ListView.builder(
-            itemCount: displayList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: const EdgeInsets.all(4.0),
-                child: Card(
-                  child: Container(
-                      color: Colors.white,
-                      child: ListTile(
-                        title: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+        child: displayList.length > 0
+            ? ListView.builder(
+                itemCount: displayList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    child: Card(
+                      child: Container(
+                          color: Colors.white,
+                          child: ListTile(
+                            title: Column(
                               children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  child: Center(
-                                    child: Text(
-                                      '${index + 1}',
-                                      style: const TextStyle(
-                                        color: Colors.brown,
-                                        fontSize: 40.0,
-                                        fontWeight: FontWeight.bold,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                      child: Center(
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: const TextStyle(
+                                            color: Colors.brown,
+                                            fontSize: 40.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.listPaper[index].venderName,
+                                            style: const TextStyle(
+                                              color: Colors.brown,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'ราคาเสนอลูกค้า : ${widget.listPaper[index].calculateMat.costNet} บาท',
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'ราคาต่อกล่อง : ${widget.listPaper[index].calculateMat.pricePerBox.toStringAsFixed(2)} บาท',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'จำนวนกล่องที่ได้ : ${widget.listPaper[index].calculateMat.boxAmount} กล่อง',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'จำนวนกระดาษที่ต้องสั่ง : ${widget.listPaper[index].calculateMat.paperAmount} แผ่น',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'ราคาต้นทุนกระดาษ : ${claculatePriceTOShow(widget.listPaper[index].calculateMat)} บาท',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          // Text(widget
+                                          //     .listPaper[index].calculateMat.bestestTemplate
+                                          //     .toString()),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.all(4.0),
+                                      child: CustomPaint(
+                                        painter: MyRectanglePainter(
+                                            calculateMat: widget
+                                                .listPaper[index].calculateMat),
+                                        size: Size(
+                                            widget.listPaper[index].widthPaper *
+                                                0.1,
+                                            widget.listPaper[index]
+                                                    .heightPaper *
+                                                0.1),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.listPaper[index].venderName,
-                                        style: const TextStyle(
-                                          color: Colors.brown,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'ราคาต้นทุนกระดาษ : ${claculatePriceTOShow(widget.listPaper[index].calculateMat)} บาท',
-                                        style: const TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'ราคาต่อกล่อง : ${widget.listPaper[index].calculateMat.pricePerBox.toStringAsFixed(2)} บาท',
-                                        style: const TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 119, 108, 104),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'จำนวนกล่องที่ได้ : ${widget.listPaper[index].calculateMat.boxAmount} กล่อง',
-                                        style: const TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 119, 108, 104),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'จำนวนกระดาษที่ต้องสั่ง : ${widget.listPaper[index].calculateMat.paperAmount} แผ่น',
-                                        style: const TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 119, 108, 104),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'ราคาเสนอลูกค้า : ${widget.listPaper[index].calculateMat.costNet} บาท',
-                                        style: const TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 119, 108, 104),
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      // Text(widget
-                                      //     .listPaper[index].calculateMat.bestestTemplate
-                                      //     .toString()),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.all(4.0),
-                                  child: CustomPaint(
-                                    painter: MyRectanglePainter(
-                                        calculateMat: widget
-                                            .listPaper[index].calculateMat),
-                                    size: Size(
-                                        widget.listPaper[index].widthPaper *
-                                            0.1,
-                                        widget.listPaper[index].heightPaper *
-                                            0.1),
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      padding: EdgeInsets.all(10),
+                                      child: ButtonApp.buttonMain(
+                                          context, 'สร้างใบเสนอราคา', () async {
+                                        await _createPDF(widget.boxOrder,
+                                                widget.listPaper[index])
+                                            .then((value) => () {});
+                                      }),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      padding: EdgeInsets.all(10),
+                                      child: ButtonApp.buttonMainNext(
+                                          context, 'เลือกและสั่งผลิต',
+                                          () async {
+                                        print(widget.boxOrder.id);
+                                        print(widget.boxOrder.status);
+                                        var confirmOrder = widget.boxOrder;
+                                        confirmOrder.status = 'purchase';
+                                        confirmOrder.materialCalculate = [];
+                                        confirmOrder.materialCalculate!
+                                            .add(widget.listPaper[index]);
+                                        confirmOrder.updateOrder();
+                                      }),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  padding: EdgeInsets.all(10),
-                                  child: ButtonApp.buttonMain(
-                                      context, 'สร้างใบเสนอราคา', () async {
-                                    await _createPDF(widget.boxOrder,
-                                            widget.listPaper[index])
-                                        .then((value) => () {});
-                                  }),
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  padding: EdgeInsets.all(10),
-                                  child: ButtonApp.buttonMainNext(
-                                      context, 'เลือกและสั่งผลิต', () async {
-                                          print(widget.boxOrder.id);
-                                          print(widget.boxOrder.status);
-                                          var confirmOrder = widget.boxOrder;
-                                          confirmOrder.status = 'purchase';
-                                          confirmOrder.materialCalculate = [];
-                                          confirmOrder.materialCalculate!.add(widget.listPaper[index]);
-                                          confirmOrder.updateOrder();
-                                  }),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )),
-                ),
-              );
-            }): const Text('ไม่พบวัตถุดิบกระดาษ'));
+                          )),
+                    ),
+                  );
+                })
+            : const Text('ไม่พบวัตถุดิบกระดาษ'));
   }
 
   double claculatePriceTOShow(CalculateMat calculateMat) {
@@ -576,12 +583,197 @@ PdfGrid _addContentRow(
   return grid;
 }
 
-class Tab2 extends StatelessWidget {
+class Tab2 extends StatefulWidget {
+  List<MaterialPaper> listPaper;
+  BoxOrder boxOrder;
+
+  Tab2({
+    Key? key,
+    required this.listPaper,
+    required this.boxOrder,
+  }) : super(key: key);
+
+  @override
+  State<Tab2> createState() => _Tab2State();
+}
+
+class _Tab2State extends State<Tab2> {
   @override
   Widget build(BuildContext context) {
+    var displayList = widget.listPaper;
+    displayList.sort((a, b) =>
+        a.calculateMat.deliverDate!.compareTo(b.calculateMat.deliverDate!));
+
+     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     return Container(
-      child: Text('This is tab 2'),
-    );
+        margin: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
+        child: displayList.length > 0
+            ? ListView.builder(
+                itemCount: displayList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    child: Card(
+                      child: Container(
+                          color: Colors.white,
+                          child: ListTile(
+                            title: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                      child: Center(
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: const TextStyle(
+                                            color: Colors.brown,
+                                            fontSize: 40.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            widget.listPaper[index].venderName,
+                                            style: const TextStyle(
+                                              color: Colors.brown,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'ราคาเสนอลูกค้า : ${widget.listPaper[index].calculateMat.costNet} บาท',
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                             Text(
+                                            'วันที่คาดว่าจะจัดส่ง : ${formatter.format(widget.listPaper[index].calculateMat.deliverDate!)}',
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'ราคาต่อกล่อง : ${widget.listPaper[index].calculateMat.pricePerBox.toStringAsFixed(2)}',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'จำนวนกล่องที่ได้ : ${widget.listPaper[index].calculateMat.boxAmount} กล่อง',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'จำนวนกระดาษที่ต้องสั่ง : ${widget.listPaper[index].calculateMat.paperAmount} แผ่น',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            'ราคาต้นทุนกระดาษ : ${claculatePriceTOShow(widget.listPaper[index].calculateMat)} บาท',
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 119, 108, 104),
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          // Text(widget
+                                          //     .listPaper[index].calculateMat.bestestTemplate
+                                          //     .toString()),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.all(4.0),
+                                      child: CustomPaint(
+                                        painter: MyRectanglePainter(
+                                            calculateMat: widget
+                                                .listPaper[index].calculateMat),
+                                        size: Size(
+                                            widget.listPaper[index].widthPaper *
+                                                0.1,
+                                            widget.listPaper[index]
+                                                    .heightPaper *
+                                                0.1),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      padding: EdgeInsets.all(10),
+                                      child: ButtonApp.buttonMain(
+                                          context, 'สร้างใบเสนอราคา', () async {
+                                        await _createPDF(widget.boxOrder,
+                                                widget.listPaper[index])
+                                            .then((value) => () {});
+                                      }),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      padding: EdgeInsets.all(10),
+                                      child: ButtonApp.buttonMainNext(
+                                          context, 'เลือกและสั่งผลิต',
+                                          () async {
+                                        print(widget.boxOrder.id);
+                                        print(widget.boxOrder.status);
+                                        var confirmOrder = widget.boxOrder;
+                                        confirmOrder.status = 'purchase';
+                                        confirmOrder.materialCalculate = [];
+                                        confirmOrder.materialCalculate!
+                                            .add(widget.listPaper[index]);
+                                        confirmOrder.updateOrder();
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
+                    ),
+                  );
+                })
+            : const Text('ไม่พบวัตถุดิบกระดาษ'));
+  }
+
+  double claculatePriceTOShow(CalculateMat calculateMat) {
+    return calculateMat.pricePerBox * calculateMat.boxAmount;
   }
 }
 

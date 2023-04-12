@@ -12,12 +12,12 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("asset/images/login.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        // decoration: const BoxDecoration(
+        //   image: DecorationImage(
+        //     image: AssetImage("asset/images/login.png"),
+        //     fit: BoxFit.cover,
+        //   ),
+        // ),
         child: Center(
           child: Container(
             width: 400,

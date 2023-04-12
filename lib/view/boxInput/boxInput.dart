@@ -103,6 +103,16 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         });
                       }
 
+                      if (deco == 1) {
+                        if (printAreaController.text == '' &&
+                            printAreaController.text == '0') {
+                          setState(() {
+                            printAreaValidator = false;
+                            valid = false;
+                          });
+                        }
+                      }
+
                       if (_selectedUnit == 'cm') {
                         widthBox = widthBox * 10;
                         heightBox = heightBox * 10;
@@ -143,6 +153,8 @@ class _BoxInputPageState extends State<BoxInputPage> {
                           customerAddress: widget.customer.address,
                           customerName: widget.customer.name,
                           customerTel: widget.customer.tel,
+                          codeColor: decoColor,
+                          printArea: printArea
                           // timestamp: DateTime.now()
                         );
 
@@ -291,21 +303,21 @@ class _BoxInputPageState extends State<BoxInputPage> {
             ),
           ],
         ),
-        Edittext.edittextGeneral('กว้าง', '', (value) {
+        Edittext.edittextNumber('กว้าง', '', (value) {
           try {
             widthBox = double.parse(value);
           } catch (e) {
             widthBoxController.text = '0';
           }
         }, widthBoxValidator, widthBoxController),
-        Edittext.edittextGeneral('ยาว', '', (value) {
+        Edittext.edittextNumber('ยาว', '', (value) {
           try {
             longBox = double.parse(value);
           } catch (e) {
             longBoxController.text = '0';
           }
         }, longBoxValidator, longBoxController),
-        Edittext.edittextGeneral('สูง', '', (value) {
+        Edittext.edittextNumber('สูง', '', (value) {
           try {
             heightBox = double.parse(value);
           } catch (e) {
@@ -673,6 +685,90 @@ class _BoxInputPageState extends State<BoxInputPage> {
                 });
               },
             ),
+          ],
+        ),
+        deco == 1 || deco == 2 ? decoColorPrint() : Container()
+      ],
+    );
+  }
+
+  String decoColor = '';
+  double printArea = 0.0;
+  var printAreaValidator = true;
+  var printAreaController = TextEditingController();
+
+  Widget decoColorPrint() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            TextWidget.textSubTitle('สีหมึกพิมพิมพ์'),
+          ],
+        ),
+        Column(
+          children: [
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("ดำ"),
+              value: 'black',
+              groupValue: decoColor,
+              onChanged: (value) {
+                setState(() {
+                  decoColor = value!;
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("แดง"),
+              value: 'red',
+              groupValue: decoColor,
+              onChanged: (value) {
+                setState(() {
+                  decoColor = value!;
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("เขียว"),
+              value: 'green',
+              groupValue: decoColor,
+              onChanged: (value) {
+                setState(() {
+                  decoColor = value!;
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("น้ำเงิน"),
+              value: 'blue',
+              groupValue: decoColor,
+              onChanged: (value) {
+                setState(() {
+                  decoColor = value!;
+                });
+              },
+            ),
+            RadioListTile(
+              activeColor: brownDark,
+              title: Text("ผสมสีเพิ่มเติม"),
+              value: 'extend',
+              groupValue: decoColor,
+              onChanged: (value) {
+                setState(() {
+                  decoColor = value!;
+                });
+              },
+            ),
+            Edittext.edittextNumber('พื้นที่การพิมพ์สี', 'ตารางนิ้ว', (value) {
+              try {
+                printArea = double.parse(value);
+              } catch (e) {
+                longBoxController.text = '0';
+              }
+            }, printAreaValidator, printAreaController)
           ],
         )
       ],

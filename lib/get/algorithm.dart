@@ -84,6 +84,10 @@ class Algorithm {
           calculateBoxAmount(materials[i].calculateMat);
       materials[i].calculateMat.pricePerBox =
           calculatePricePerBox(materials[i].calculateMat, materials[i], box);
+      materials[i].calculateMat.costNet =
+          calculateCostNet(materials[i].calculateMat, box);
+      materials[i].calculateMat.deliverDate =
+          estimateDeliverDate(materials[i], box);
     }
 
     box.materialCalculate = materials;
@@ -307,8 +311,49 @@ class Algorithm {
     return calculateMat.bestestTemplate['countbox'] * calculateMat.paperAmount;
   }
 
-  static num calculateCostNet(CalculateMat calculateMat) {
-    return (calculateMat.pricePerBox * calculateMat.boxAmount) +
-        (calculateMat.pricePerBox * 0.3); // + กำไร 30%
+  static num calculateCostNet(CalculateMat calculateMat, BoxOrder box) {
+    var cost = 0.0;
+    if (box.isUseColorOver) {
+      cost = calculateMat.pricePerBox + 2;
+    } else {
+      cost = calculateMat.pricePerBox;
+    }
+
+    var costNet = cost * calculateMat.boxAmount;
+    costNet = costNet + (costNet * 0.3); // + กำไร 30%
+
+    if (box.useDesignService == 1) {
+      if (box.codeColor == 'black' ||
+          box.codeColor == 'red' ||
+          box.codeColor == 'green' ||
+          box.codeColor == 'blue') {
+      } else {
+        costNet = costNet + 1600; //-> ค่าผสมสี
+      }
+      costNet = costNet + 800; //-> ค่าบล็อคพิม
+      costNet = costNet + (box.printArea! * 6); //-> ค่าพิมตารางเมตรละ 6 บาท
+    }
+    return costNet;
+  }
+
+  static DateTime estimateDeliverDate(
+      MaterialPaper materialPaper, BoxOrder box) {
+    DateTime result = DateTime.now();
+
+    var develiverPeroid = materialPaper.deliverIndays + 8;
+
+    while (develiverPeroid > 0) {
+      print('develiverPeroid = $develiverPeroid');
+      print('develiverPeroid = $develiverPeroid');
+      print('result.weekday = ${result.weekday}');
+      result = result.add(const Duration(days: 1));
+      if (result.weekday != DateTime.saturday &&
+          result.weekday != DateTime.sunday) {
+        develiverPeroid = develiverPeroid - 1;
+        print('develiverPeroid = $develiverPeroid');
+      }
+    }
+
+    return result;
   }
 }

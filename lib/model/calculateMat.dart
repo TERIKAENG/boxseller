@@ -14,12 +14,20 @@ class CalculateMat {
 
   //ต้นทุนรวม
   num costNet = 0;
+
+  DateTime? deliverDate = DateTime.now();
+
+
+
+
+
   CalculateMat({
     required this.bestestTemplate,
     required this.pricePerBox,
     required this.paperAmount,
     required this.boxAmount,
     required this.costNet,
+    this.deliverDate
   });
 
   Map<String, dynamic> toMap() {
@@ -29,19 +37,18 @@ class CalculateMat {
       'paperAmount': paperAmount,
       'boxAmount': boxAmount,
       'costNet': costNet,
+      'deliverDate':deliverDate.toString(),
     };
   }
 
   factory CalculateMat.fromMap(Map<String, dynamic> map) {
-    print('mapmapmapmapmapmapmapmapmapmapmapmapmapmapmap 2 ');
-    print(map);
-    print('mapmapmapmapmapmapmapmapmapmapmapmapmapmapmap 2 ');
     return CalculateMat(
       bestestTemplate: map['bestestTemplate'],
       pricePerBox: map['pricePerBox'] as double,
       paperAmount: map['paperAmount'] as num,
       boxAmount: map['boxAmount'] as num,
       costNet: map['costNet'] as num,
+      deliverDate: map['deliverDate'] != null ?  DateTime.parse(map['deliverDate'] ) : DateTime.now()
     );
   }
 

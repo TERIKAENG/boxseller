@@ -22,7 +22,8 @@ class MaterialPaper {
   double heightPaper;
   double pricePaper;
   int minimumPaper;
-  int deliverIndays;
+  int deliverIndays
+  ;
   CalculateMat calculateMat = CalculateMat(
       boxAmount: 0,
       costNet: 0,

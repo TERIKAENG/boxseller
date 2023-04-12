@@ -1,5 +1,9 @@
+import 'package:boxseller/view/deliver/deliver.dart';
+import 'package:boxseller/view/purchase/purchase.dart';
 import 'package:flutter/material.dart';
 
+import '../../widget/logo.dart';
+import '../produce/produce.dart';
 import '../sale/saleorder.dart';
 import '../vender/vender.dart';
 
@@ -38,6 +42,7 @@ class _HomePageState extends State<HomePage> {
       color: Colors.grey[200],
       child: ListView(
         children: [
+          UIkit.logo(),
           ListTile(
             title: const Text('รายการประเมินราคา'),
             leading: const Icon(Icons.aod),
@@ -57,24 +62,32 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           ListTile(
-            title: Text('รายการสั่งผลิต'),
+            title: Text('รายการสั่งวัตถุดิบกระดาษ'),
             leading: Icon(Icons.add_business_sharp),
             onTap: () {
               setState(() {
-                showWideget = VendorList();
+                showWideget = const PurchasePage();
               });
             },
           ),
-          // ListTile(
-          //   title: Text('Contact'),
-          //   leading: Icon(Icons.contact_mail),
-          //   onTap: () {},
-          // ),
-          // ListTile(
-          //   title: Text('FAQ'),
-          //   leading: Icon(Icons.question_answer),
-          //   onTap: () {},
-          // ),
+          ListTile(
+            title: Text('รายการผลิต'),
+            leading: Icon(Icons.add_business_sharp),
+            onTap: () {
+              setState(() {
+                showWideget = const ProducePage();
+              });
+            },
+          ),
+          ListTile(
+            title: Text('รายการจัดส่ง'),
+            leading: Icon(Icons.add_business_sharp),
+            onTap: () {
+              setState(() {
+                showWideget = const DeliverPage();
+              });
+            },
+          ),
         ],
       ),
     );

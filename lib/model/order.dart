@@ -36,38 +36,45 @@ class BoxOrder {
   Object? material;
   // DateTime timestamp;
 
+  String? customColor;
+  String? codeColor;
+
+  double? printArea;
+
   List<MaterialPaper>? materialCalculate = [];
 
-  BoxOrder({
-    this.id,
-    required this.name,
-    required this.weightProduct,
-    required this.widthBox,
-    required this.longBox,
-    required this.heightBox,
-    required this.unit,
-    required this.orderAmount,
-    required this.isHumidityProduct,
-    required this.isHumidityWarehouse,
-    required this.amount_stack_warehouse,
-    required this.useDesignService,
-    required this.isSharpPrint,
-    required this.isUseColorOver,
-    required this.artwork,
-    required this.isDeliveryProduct,
-    required this.widthTemplate,
-    required this.heightTemplate,
-    required this.empId,
-    required this.status,
-    required this.paper,
-    required this.customer,
-    required this.customerName,
-    required this.customerAddress,
-    required this.customerTel,
-    this.ronType,
-    this.material,
-    this.materialCalculate,
-  });
+  BoxOrder(
+      {this.id,
+      required this.name,
+      required this.weightProduct,
+      required this.widthBox,
+      required this.longBox,
+      required this.heightBox,
+      required this.unit,
+      required this.orderAmount,
+      required this.isHumidityProduct,
+      required this.isHumidityWarehouse,
+      required this.amount_stack_warehouse,
+      required this.useDesignService,
+      required this.isSharpPrint,
+      required this.isUseColorOver,
+      required this.artwork,
+      required this.isDeliveryProduct,
+      required this.widthTemplate,
+      required this.heightTemplate,
+      required this.empId,
+      required this.status,
+      required this.paper,
+      required this.customer,
+      required this.customerName,
+      required this.customerAddress,
+      required this.customerTel,
+      this.ronType,
+      this.material,
+      this.materialCalculate,
+      this.customColor,
+      this.codeColor,
+      this.printArea});
 
   @override
   String toString() {
@@ -107,6 +114,9 @@ class BoxOrder {
           'customerTel': customerTel,
           'materialCalculate': json.encode(materialCalculate),
           'rontype': ronType,
+          'customColor': customColor,
+          'codeColor': codeColor,
+          'printArea': printArea
           // 'timestamp': timestamp,
         })
         .then((value) => print("Order Added"))
@@ -144,6 +154,9 @@ class BoxOrder {
           'customerTel': customerTel,
           'materialCalculate': json.encode(materialCalculate),
           'rontype': ronType,
+          'customColor': customColor,
+          'codeColor': codeColor,
+          'printArea': printArea
           // 'timestamp': timestamp,
         }) // <-- Updated data
         .then((_) => print('Success'))
@@ -190,6 +203,9 @@ class BoxOrder {
       'ronType': ronType,
       // 'material': material?.toMap(),
       'materialCalculate': materialCalculate,
+      'customColor': customColor,
+      'codeColor': codeColor,
+      'printArea': printArea
     };
   }
 
@@ -205,34 +221,40 @@ class BoxOrder {
     }
 
     return BoxOrder(
-        id: map['id'] != null ? map['id'] as String : null,
-        name: map['name'] as String,
-        weightProduct: map['weightProduct'] as double,
-        widthBox: map['widthBox'] as double,
-        longBox: map['longBox'] as double,
-        heightBox: map['heightBox'] as double,
-        unit: map['unit'] as int,
-        orderAmount: map['orderAmount'] as int,
-        isHumidityProduct: map['isHumidityProduct'] as int,
-        isHumidityWarehouse: map['isHumidityWarehouse'] as int,
-        amount_stack_warehouse: map['amount_stack_warehouse'] as bool,
-        useDesignService: map['useDesignService'] as int,
-        isSharpPrint: map['isSharpPrint'] as int,
-        isUseColorOver: map['isUseColorOver'] as bool,
-        artwork: map['artwork'] as String,
-        isDeliveryProduct: map['isDeliveryProduct'] as int,
-        widthTemplate: map['widthTemplate'] as double,
-        heightTemplate: map['heightTemplate'] as double,
-        empId: map['empId'] as String,
-        status: map['status'] as String,
-        paper: map['paper'] as String,
-        customer: map['customer'] as String,
-        ronType: map['ronType'] != null ? map['ronType'] as String : null,
-        // material: map['material'] != null ? Object.fromMap(map['material'] as Map<String,dynamic>) : null,
-        materialCalculate: data,
-        customerName: map['customerName'] as String,
-        customerAddress: map['customerAddress'] as String,
-        customerTel: map['customerTel'] as String);
+      id: map['id'] != null ? map['id'] as String : null,
+      name: map['name'] as String,
+      weightProduct: map['weightProduct'] as double,
+      widthBox: map['widthBox'] as double,
+      longBox: map['longBox'] as double,
+      heightBox: map['heightBox'] as double,
+      unit: map['unit'] as int,
+      orderAmount: map['orderAmount'] as int,
+      isHumidityProduct: map['isHumidityProduct'] as int,
+      isHumidityWarehouse: map['isHumidityWarehouse'] as int,
+      amount_stack_warehouse: map['amount_stack_warehouse'] as bool,
+      useDesignService: map['useDesignService'] as int,
+      isSharpPrint: map['isSharpPrint'] as int,
+      isUseColorOver: map['isUseColorOver'] as bool,
+      artwork: map['artwork'] as String,
+      isDeliveryProduct: map['isDeliveryProduct'] as int,
+      widthTemplate: map['widthTemplate'] as double,
+      heightTemplate: map['heightTemplate'] as double,
+      empId: map['empId'] as String,
+      status: map['status'] as String,
+      paper: map['paper'] as String,
+      customer: map['customer'] as String,
+      ronType: map['ronType'] != null ? map['ronType'] as String : null,
+      // material: map['material'] != null ? Object.fromMap(map['material'] as Map<String,dynamic>) : null,
+      materialCalculate: data,
+      customerName: map['customerName'] as String,
+      customerAddress: map['customerAddress'] as String,
+      customerTel: map['customerTel'] as String,
+      customColor: map['customColor'] != null ? map['customColor'] as String : null,
+      codeColor: map['codeColor'] != null ? map['codeColor'] as String : null,
+      printArea:  map['printArea'] != null ? map['printArea'] as double : null,
+      
+
+    );
   }
 
   String toJson() => json.encode(toMap());
@@ -268,7 +290,11 @@ class BoxOrder {
       List<MaterialPaper>? materialCalculate,
       String? customerName,
       String? customerAddress,
-      String? customerTel}) {
+      String? customerTel,
+      String? customColor,
+      String? codeColor,
+      DateTime? deliverEstimate,
+      double? printArea}) {
     return BoxOrder(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -298,6 +324,9 @@ class BoxOrder {
         materialCalculate: materialCalculate ?? this.materialCalculate,
         customerName: customerName ?? this.customerName,
         customerAddress: customerAddress ?? this.customerAddress,
-        customerTel: customerTel ?? this.customerTel);
+        customerTel: customerTel ?? this.customerTel,
+        customColor: customColor ?? this.customColor,
+        codeColor: codeColor ?? this.codeColor,
+        printArea: printArea ?? this.printArea);
   }
 }

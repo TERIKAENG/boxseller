@@ -10,20 +10,21 @@ import '../../model/order.dart';
 import '../customer/addCustomer.dart';
 import '../customer/customerDetail.dart';
 import '../order/orderDetail.dart';
+import 'deliverDetail.dart';
 
-class ProducePage extends StatefulWidget {
-  const ProducePage({super.key});
+class DeliverPage extends StatefulWidget {
+  const DeliverPage({super.key});
 
   @override
-  State<ProducePage> createState() => _ProducePageState();
+  State<DeliverPage> createState() => _DeliverPageState();
 }
 
-class _ProducePageState extends State<ProducePage> {
+class _DeliverPageState extends State<DeliverPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายการการผลิต'),
+        title: Text('รายการการจัดส่ง'),
         automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 160, 133, 105),
       ),
@@ -37,7 +38,7 @@ class _ProducePageState extends State<ProducePage> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Get.to(ProduceDetail(
+                    Get.to(DeliverDetail(
                       order: snapshot.data![index],
                     ));
                   },

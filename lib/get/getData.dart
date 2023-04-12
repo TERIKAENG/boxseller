@@ -8,7 +8,6 @@ import '../model/order.dart';
 import '../model/vender.dart';
 
 class GetData {
-
   CollectionReference customers =
       FirebaseFirestore.instance.collection('customers');
 
@@ -20,7 +19,6 @@ class GetData {
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
-
     for (int i = 0; i < allData.length; i++) {
       var newjson = json.encode(allData[i]);
       Customer newCustomer = Customer.fromJson(newjson);
@@ -31,7 +29,7 @@ class GetData {
     return list;
   }
 
-    Future<Customer> getDataCustomerByID(String id) async {
+  Future<Customer> getDataCustomerByID(String id) async {
     // Get docs from collection reference
     List<Customer> list = [];
     QuerySnapshot querySnapshot = await customers.get();
@@ -39,14 +37,13 @@ class GetData {
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
-
     for (int i = 0; i < allData.length; i++) {
       var newjson = json.encode(allData[i]);
       Customer newCustomer = Customer.fromJson(newjson);
       newCustomer.id = querySnapshot.docs[i].id;
-        if('${newCustomer.id}' == id){
-            return newCustomer;
-        }
+      if ('${newCustomer.id}' == id) {
+        return newCustomer;
+      }
     }
     return Customer(name: '', tel: '', address: '');
   }
@@ -99,6 +96,28 @@ class GetData {
     return list;
   }
 
+  Future<List<BoxOrder>> getDataOrder(String status) async {
+    // Get docs from collection reference
+    List<BoxOrder> list = [];
+    QuerySnapshot querySnapshot = await orders.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    for (int i = 0; i < allData.length; i++) {
+      print(allData[i]);
+      var newjson = json.encode(allData[i]);
+
+      BoxOrder newOrder = BoxOrder.fromJson(newjson);
+      print(newOrder.toString());
+      if (newOrder.status == status) {
+        newOrder.id = querySnapshot.docs[i].id;
+        list.add(newOrder);
+      }
+    }
+
+    return list;
+  }
+
   CollectionReference materials =
       FirebaseFirestore.instance.collection('materials');
 
@@ -114,7 +133,7 @@ class GetData {
     for (int i = 0; i < allData.length; i++) {
       String newjson = json.encode(allData[i]);
       //print(newjson);
-      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson,0);
+      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson, 0);
       if (newMaterial.vender == venderId) {
         newMaterial.id = querySnapshot.docs[i].id;
         list.add(newMaterial);
@@ -137,7 +156,7 @@ class GetData {
     for (int i = 0; i < allData.length; i++) {
       // print(allData[i].toString());
       var newjson = json.encode(allData[i]);
-      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson,0);
+      MaterialPaper newMaterial = MaterialPaper.fromJson(newjson, 0);
       if (newMaterial.paperType == paperType &&
           newMaterial.ronType == ronType) {
         newMaterial.id = querySnapshot.docs[i].id;

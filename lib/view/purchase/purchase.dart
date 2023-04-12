@@ -1,4 +1,5 @@
 import 'package:boxseller/view/produce/produceDetail.dart';
+import 'package:boxseller/view/purchase/purchaseDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -11,19 +12,19 @@ import '../customer/addCustomer.dart';
 import '../customer/customerDetail.dart';
 import '../order/orderDetail.dart';
 
-class ProducePage extends StatefulWidget {
-  const ProducePage({super.key});
+class PurchasePage extends StatefulWidget {
+  const PurchasePage({super.key});
 
   @override
-  State<ProducePage> createState() => _ProducePageState();
+  State<PurchasePage> createState() => _PurchasePageState();
 }
 
-class _ProducePageState extends State<ProducePage> {
+class _PurchasePageState extends State<PurchasePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายการการผลิต'),
+        title: Text('รายการจัดซื้อ'),
         automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 160, 133, 105),
       ),
@@ -37,7 +38,7 @@ class _ProducePageState extends State<ProducePage> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Get.to(ProduceDetail(
+                    Get.to(PurchaseDetail(
                       order: snapshot.data![index],
                     ));
                   },
