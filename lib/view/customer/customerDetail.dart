@@ -70,7 +70,7 @@ class _CustomerDetailState extends State<CustomerDetail> {
                         }
                       }),
                       Container(
-                          height: MediaQuery.of(context).size.height * 0.7,
+                          height: MediaQuery.of(context).size.height * 0.8,
                           width: MediaQuery.of(context).size.width * 0.6,
                           padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
                           child: detail()),
@@ -111,7 +111,7 @@ class _CustomerDetailState extends State<CustomerDetail> {
                 child: Card(
                     child: ListTile(
                   title: Text('ออเดอร์ : ${snapshot.data![index].id}'),
-                  subtitle: Text("${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง"),
+                  subtitle: Text("${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง\nสถานะ ${snapshot.data![index].status}"),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.brown,

@@ -313,7 +313,9 @@ class _DeliverDetailState extends State<DeliverDetail> {
                               child: CustomPaint(
                                 painter: MyRectanglePainter(
                                     calculateMat: widget.order
-                                        .materialCalculate![0].calculateMat),
+                                        .materialCalculate![0].calculateMat, height: widget.order
+                                        .materialCalculate![0].heightPaper, width: widget.order
+                                        .materialCalculate![0].widthPaper),
                                 size: Size(
                                     widget.order.materialCalculate![0]
                                             .widthPaper *
@@ -332,16 +334,10 @@ class _DeliverDetailState extends State<DeliverDetail> {
                             Container(
                               width: MediaQuery.of(context).size.width * 0.3,
                               padding: EdgeInsets.all(10),
-                              child: ButtonApp.buttonMain(
-                                  context, 'ใบเสร็จ', () async {
-                                // print(widget.boxOrder.id);
-                                // print(widget.boxOrder.status);
-                                // var confirmOrder = widget.boxOrder;
-                                // confirmOrder.status = 'purchase';
-                                // confirmOrder.materialCalculate = [];
-                                // confirmOrder.materialCalculate!
-                                //     .add(widget.listPaper[index]);
-                                // confirmOrder.updateOrder();
+                              child: ButtonApp.buttonMain(context, 'ใบเสร็จ',
+                                  () async {
+                                await _createReceiptPDF(widget.order)
+                                    .then((value) => () {});
                               }),
                             ),
                             Container(
@@ -349,14 +345,9 @@ class _DeliverDetailState extends State<DeliverDetail> {
                                 padding: EdgeInsets.all(10),
                                 child: ButtonApp.buttonMainNext(
                                     context, 'จัดส่งสำเร็จ', () async {
-                                  // print(widget.boxOrder.id);
-                                  // print(widget.boxOrder.status);
-                                  // var confirmOrder = widget.boxOrder;
-                                  // confirmOrder.status = 'purchase';
-                                  // confirmOrder.materialCalculate = [];
-                                  // confirmOrder.materialCalculate!
-                                  //     .add(widget.listPaper[index]);
-                                  // confirmOrder.updateOrder();
+                                  var confirmOrder = widget.order;
+                                  confirmOrder.status = 'done';
+                                  confirmOrder.updateOrder();
                                 }))
                           ],
                         ),
@@ -375,7 +366,7 @@ class _DeliverDetailState extends State<DeliverDetail> {
   }
 }
 
-Future<void> _createPDF(BoxOrder order, MaterialPaper paper) async {
+Future<void> _createReceiptPDF(BoxOrder order) async {
   var now = new DateTime.now();
   var formatter = new DateFormat('dd/MM/yyyy');
   String formattedDate = formatter.format(now);
@@ -438,23 +429,35 @@ Future<void> _createPDF(BoxOrder order, MaterialPaper paper) async {
   //Add cell value and style properties
   headerRow1.cells[0].value = 'BOX SELLER';
   headerRow1.cells[0].style.stringFormat = format;
-  headerRow1.cells[1].value = 'ใบเสนอราคา';
+  headerRow1.cells[1].value = 'ใบกำกับภาษี / ใบส่งของ';
   headerRow1.cells[1].style.stringFormat = format;
   headerRow1.cells[1].columnSpan = 2;
   final PdfGridRow headerRow2 = headerGrid.rows.add();
   headerRow2.cells[0].value = '';
   headerRow2.cells[0].columnSpan = 3;
   headerRow2.height = 15;
+
+  final PdfGridRow headerRow5 = headerGrid.rows.add();
+  headerRow5.cells[0].value = '  เลขที่ : xxxx-xxxx';
+  headerRow5.cells[0].columnSpan = 3;
+  headerRow5.height = 25;
+
+  final PdfGridRow headerRow6 = headerGrid.rows.add();
+  headerRow6.cells[0].value = '  เงื่อนไขการชำระเงิน : เงินสด / โอน';
+  headerRow6.cells[0].columnSpan = 3;
+  headerRow6.height = 25;
+
   final PdfGridRow headerRow3 = headerGrid.rows.add();
-  headerRow3.cells[0].value = 'ชื่อลูกค้า :';
+  headerRow3.cells[0].value = '  ผู้ซื้อ :';
   headerRow3.cells[0].style.stringFormat = middleFormat;
   headerRow3.cells[0].style.cellPadding = padding;
-  headerRow3.cells[1].value = order.customerName;
+  headerRow3.cells[1].value = '   ${order.customerName}';
   headerRow3.cells[1].style.stringFormat = middleFormat;
   headerRow3.cells[1].style.cellPadding = padding;
-  headerRow3.cells[2].value = 'DATE: $formattedDate';
+  headerRow3.cells[2].value = 'วันที่: ${formatter.format(order.materialCalculate![0].calculateMat.deliverDate!)}';
   headerRow3.cells[2].style.stringFormat = middleFormat;
   headerRow3.cells[2].style.cellPadding = padding;
+
   final PdfGridRow headerRow4 = headerGrid.rows.add();
 
   headerRow4.cells[0].value =
@@ -481,12 +484,14 @@ Future<void> _createPDF(BoxOrder order, MaterialPaper paper) async {
   //Create a new grid
   PdfGrid contentGrid = PdfGrid();
   contentGrid.style.font = font;
-  contentGrid.columns.add(count: 3);
+  contentGrid.columns.add(count: 5);
   //Add grid header
   contentGrid.headers.add(1);
   contentGrid.columns[0].width = 80;
   //contentGrid.columns[1].width = 380;
   contentGrid.columns[2].width = 80;
+  contentGrid.columns[3].width = 80;
+  contentGrid.columns[4].width = 80;
   //Get header and set values
   final PdfGridRow contentHeader = contentGrid.headers[0];
   contentHeader.cells[0].value = 'ลำดับ';
@@ -498,6 +503,13 @@ Future<void> _createPDF(BoxOrder order, MaterialPaper paper) async {
   contentHeader.cells[2].value = 'จำนวน';
   contentHeader.cells[2].style.stringFormat = format;
   contentHeader.cells[2].style.borders = borders;
+  contentHeader.cells[3].value = 'หน่วยละ';
+  contentHeader.cells[3].style.stringFormat = format;
+  contentHeader.cells[3].style.borders = borders;
+  contentHeader.cells[4].value = 'จำนวนเงิน';
+  contentHeader.cells[4].style.stringFormat = format;
+  contentHeader.cells[4].style.borders = borders;
+
   //Add content rows
   contentGrid = _addContentRow(
       '1',
@@ -505,19 +517,43 @@ Future<void> _createPDF(BoxOrder order, MaterialPaper paper) async {
       format,
       middleFormat,
       padding,
-      'กล่อง${order.name} ขนาด ${order.widthBox * 0.1} x ${order.longBox * 0.1} x ${order.heightBox * 0.1} ซม.',
-      '${paper.calculateMat.boxAmount}');
+      'กล่องฝาชน (${order.name}) ขนาด ${order.widthBox * 0.1} x ${order.longBox * 0.1} x ${order.heightBox * 0.1} ซม.',
+      '${order.materialCalculate![0].calculateMat.boxAmount}',
+      order.materialCalculate![0].calculateMat.pricePerBox.toStringAsFixed(2),
+      order.materialCalculate![0].calculateMat.costNet.toStringAsFixed(2));
   // contentGrid = _addContentRow('2', contentGrid, format, middleFormat, padding);
   // contentGrid = _addContentRow('3', contentGrid, format, middleFormat, padding);
   // contentGrid = _addContentRow('4', contentGrid, format, middleFormat, padding);
   // contentGrid = _addContentRow('5', contentGrid, format, middleFormat, padding);
   //Add a new row
   final PdfGridRow totalRow = contentGrid.rows.add();
-  totalRow.cells[0].value = 'ราคารวม ${paper.calculateMat.costNet} บาท';
+  totalRow.cells[0].value =
+      'ราคารวม ${order.materialCalculate![0].calculateMat.costNet} บาท';
   //Set column span
-  totalRow.cells[0].columnSpan = 3;
+  totalRow.cells[0].columnSpan = 5;
   totalRow.cells[0].style.stringFormat = format;
   totalRow.height = 25;
+
+  // //Add grid header
+  // contentGrid.headers.add(1);
+  // //Get header and set values
+  // final PdfGridRow signHeader = contentGrid.headers[0];
+  // signHeader.cells[0].value = 'ผู้รับ';
+  // signHeader.cells[0].style.stringFormat = format;
+  // signHeader.cells[0].style.borders = borders;
+  // signHeader.cells[1].value = 'ผู้ส่ง';
+  // signHeader.cells[1].style.stringFormat = format;
+  // signHeader.cells[1].style.borders = borders;
+
+  // final PdfGridRow signRow = contentGrid.rows.add();
+  // signRow.height = 70;
+  // signRow.cells[0].value = '';
+  // signRow.cells[0].style.stringFormat = format;
+  // signRow.cells[0].style.borders = borders;
+  // signRow.cells[1].value = '';
+  // signRow.cells[1].style.stringFormat = format;
+  // signRow.cells[1].style.borders = borders;
+
   //Set borders for all cells in grid
   for (int i = 0; i < contentGrid.rows.count; i++) {
     final PdfGridRow contentRow = contentGrid.rows[i];
@@ -560,7 +596,7 @@ Future<void> _createPDF(BoxOrder order, MaterialPaper paper) async {
       href:
           "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
     ..setAttribute(
-        "download", "quotation-${order.customerName}-$formattedDate.pdf")
+        "download", "receipt-${order.customerName}-$formattedDate.pdf")
     ..click();
 }
 
@@ -572,42 +608,29 @@ PdfGrid _addContentRow(
     PdfStringFormat middleFormat,
     PdfPaddings padding,
     String title,
-    String quantity) {
+    String quantity,
+    String priceperBox,
+    String costNet) {
   //Add a row
   final PdfGridRow contentRow1 = grid.rows.add();
   //Set height
-  contentRow1.height = 18;
+  contentRow1.height = 400;
   //Set values and style properties
   contentRow1.cells[0].value = srNo;
-  contentRow1.cells[0].style.stringFormat = format;
+  //contentRow1.cells[0].style.stringFormat = format;
   //Set row span
   //contentRow1.cells[0].rowSpan = 6;
   //contentRow1.cells[1].rowSpan = 6;
   contentRow1.cells[1].value = '  $title';
+
   contentRow1.cells[2].value = '  $quantity';
-  // contentRow1.cells[2].rowSpan = 6;
-  // final PdfGridRow contentRow2 = grid.rows.add();
-  // contentRow2.cells[1].value = 'DESIGN NO-';
-  // contentRow2.cells[1].style.cellPadding = padding;
-  // contentRow2.cells[1].style.stringFormat = middleFormat;
-  // final PdfGridRow contentRow3 = grid.rows.add();
-  // contentRow3.cells[1].value = 'GROSS WEIGHT-';
-  // contentRow3.cells[1].style.cellPadding = padding;
-  // contentRow3.cells[1].style.stringFormat = middleFormat;
-  // final PdfGridRow contentRow4 = grid.rows.add();
-  // contentRow4.cells[1].value = 'DIAMOND CTS-';
-  // contentRow4.cells[1].style.cellPadding = padding;
-  // contentRow4.cells[1].style.stringFormat = middleFormat;
-  // final PdfGridRow contentRow5 = grid.rows.add();
-  // contentRow5.cells[1].value = 'GOLD COLOUR-';
-  // contentRow5.cells[1].style.cellPadding = padding;
-  // contentRow5.cells[1].style.stringFormat = middleFormat;
-  // final PdfGridRow contentRow6 = grid.rows.add();
-  // contentRow6.cells[1].value = '';
-  // contentRow6.height = 15;
-  // final PdfGridRow contentRow7 = grid.rows.add();
-  // contentRow7.cells[0].value = '';
-  // contentRow7.cells[0].columnSpan = 4;
-  // contentRow7.height = 5;
+  //contentRow1.cells[2].style.stringFormat = format;
+
+  contentRow1.cells[3].value = '  $priceperBox';
+  //contentRow1.cells[3].style.stringFormat = format;
+
+  contentRow1.cells[4].value = '  $costNet';
+  //contentRow1.cells[4].style.stringFormat = format;
+
   return grid;
 }

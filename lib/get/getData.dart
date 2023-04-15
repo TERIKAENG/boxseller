@@ -87,7 +87,19 @@ class GetData {
 
       BoxOrder newOrder = BoxOrder.fromJson(newjson);
       print(newOrder.toString());
-      if (newOrder.customer == customerId) {
+      if (newOrder.customer == customerId && (newOrder.status == 'estimate')) {
+        newOrder.id = querySnapshot.docs[i].id;
+        list.add(newOrder);
+      }
+    }
+
+    for (int i = 0; i < allData.length; i++) {
+      print(allData[i]);
+      var newjson = json.encode(allData[i]);
+
+      BoxOrder newOrder = BoxOrder.fromJson(newjson);
+      print(newOrder.toString());
+      if (newOrder.customer == customerId && (newOrder.status == 'done')) {
         newOrder.id = querySnapshot.docs[i].id;
         list.add(newOrder);
       }

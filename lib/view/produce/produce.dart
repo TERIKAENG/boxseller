@@ -28,7 +28,7 @@ class _ProducePageState extends State<ProducePage> {
         backgroundColor: Color.fromARGB(255, 160, 133, 105),
       ),
       body: FutureBuilder<List<BoxOrder>>(
-        future: GetData().getDataOrder('purchase'),
+        future: GetData().getDataOrder('produce'),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

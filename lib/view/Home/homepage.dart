@@ -1,5 +1,7 @@
 import 'package:boxseller/view/deliver/deliver.dart';
+import 'package:boxseller/view/login/loginPage.dart';
 import 'package:boxseller/view/purchase/purchase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../widget/logo.dart';
@@ -20,7 +22,18 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 76, 60, 55),
-        title: Text('My App'),
+        title: const Text('BOX SELLER'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            onPressed: () {
+             signOut();
+            },
+          )
+        ],
       ),
       backgroundColor: Colors.brown[100],
       body: Row(
@@ -34,6 +47,12 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 
   Widget navigation() {
@@ -53,15 +72,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           ListTile(
-            title: Text('วัตถุดิบกระดาษ'),
-            leading: Icon(Icons.account_tree_rounded),
-            onTap: () {
-              setState(() {
-                showWideget = VendorList();
-              });
-            },
-          ),
-          ListTile(
             title: Text('รายการสั่งวัตถุดิบกระดาษ'),
             leading: Icon(Icons.add_business_sharp),
             onTap: () {
@@ -72,7 +82,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             title: Text('รายการผลิต'),
-            leading: Icon(Icons.add_business_sharp),
+            leading: Icon(Icons.factory),
             onTap: () {
               setState(() {
                 showWideget = const ProducePage();
@@ -81,10 +91,19 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             title: Text('รายการจัดส่ง'),
-            leading: Icon(Icons.add_business_sharp),
+            leading: Icon(Icons.local_shipping),
             onTap: () {
               setState(() {
                 showWideget = const DeliverPage();
+              });
+            },
+          ),
+          ListTile(
+            title: Text('วัตถุดิบกระดาษ'),
+            leading: Icon(Icons.account_tree_rounded),
+            onTap: () {
+              setState(() {
+                showWideget = VendorList();
               });
             },
           ),

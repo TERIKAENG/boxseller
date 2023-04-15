@@ -287,7 +287,11 @@ class _Tab1State extends State<Tab1> {
                                       child: CustomPaint(
                                         painter: MyRectanglePainter(
                                             calculateMat: widget
-                                                .listPaper[index].calculateMat),
+                                                .listPaper[index].calculateMat,
+                                            height: widget
+                                                .listPaper[index].heightPaper,
+                                            width: widget
+                                                .listPaper[index].widthPaper),
                                         size: Size(
                                             widget.listPaper[index].widthPaper *
                                                 0.1,
@@ -604,7 +608,7 @@ class _Tab2State extends State<Tab2> {
     displayList.sort((a, b) =>
         a.calculateMat.deliverDate!.compareTo(b.calculateMat.deliverDate!));
 
-     final DateFormat formatter = DateFormat('dd/MM/yyyy');
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
     return Container(
         margin: const EdgeInsets.all(10.0),
         padding: const EdgeInsets.all(10.0),
@@ -663,7 +667,7 @@ class _Tab2State extends State<Tab2> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                             Text(
+                                          Text(
                                             'วันที่คาดว่าจะจัดส่ง : ${formatter.format(widget.listPaper[index].calculateMat.deliverDate!)}',
                                             style: const TextStyle(
                                               color: Colors.red,
@@ -718,7 +722,11 @@ class _Tab2State extends State<Tab2> {
                                       child: CustomPaint(
                                         painter: MyRectanglePainter(
                                             calculateMat: widget
-                                                .listPaper[index].calculateMat),
+                                                .listPaper[index].calculateMat,
+                                            height: widget
+                                                .listPaper[index].heightPaper,
+                                            width: widget
+                                                .listPaper[index].widthPaper),
                                         size: Size(
                                             widget.listPaper[index].widthPaper *
                                                 0.1,

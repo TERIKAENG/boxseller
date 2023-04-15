@@ -1,4 +1,4 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +10,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var controllerEmail = TextEditingController(text: '');
+    var controllerPassword = TextEditingController(text: '');
+
     return Scaffold(
       body: Container(
         // decoration: const BoxDecoration(
@@ -34,28 +37,75 @@ class LoginPage extends StatelessWidget {
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: controllerEmail,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Email',
+                    labelText: 'บัญชีผู้ใช้',
                   ),
                 ),
                 const SizedBox(height: 10),
-                const TextField(
+                TextField(
+                  controller: controllerPassword,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Password',
+                    labelText: 'รหัสผ่าน',
                   ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                     Get.to(  HomePage());
+                  onPressed: () async {
+                    if (controllerEmail.text != '' &&
+                        controllerPassword.text != '') {
+                      try {
+                        final credential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: controllerEmail.text,
+                                password: controllerPassword.text);
+                        print(credential.toString());
+                        if (credential != null) {
+                          Get.to(HomePage());
+                        }
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          print('No user found for that email.');
+
+                          const snackBar = SnackBar(
+                            content: Text('ไม่พบบัญชีผู้ใช้'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (e.code == 'wrong-password') {
+                          print('Wrong password provided for that user.');
+                          const snackBar = SnackBar(
+                            content: Text('รหัสผ่านไม่ถูกต้อง'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (e.code == 'invalid-email') {
+                          print(e.code);
+                          const snackBar = SnackBar(
+                            content: Text('กรุณากรอกบัญชีผู้ใช้ให้ถูกต้อง'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          print(e.code);
+                          const snackBar = SnackBar(
+                            content: Text('กรุณากรอกบัญชีผู้ใช้ให้ถูกต้อง'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      }
+                    } else {
+                      const snackBar = SnackBar(
+                        content: Text('กรุณากรอกบัญชีผู้ใช้และรหัสผ่าน'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.brown,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                     textStyle: const TextStyle(fontSize: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),

@@ -61,6 +61,37 @@ class Algorithm {
     return box;
   }
 
+  static double getWidth_Variants(BoxOrder box) {
+    var w = 0.0;
+    if (box.ronType == 'BC') {
+      w = box.widthBox - 3;
+    } else {
+      w = box.widthBox - 2;
+    }
+    return w;
+  }
+
+
+  static double getHeight_Variants(BoxOrder box) {
+    double w = 0.0;
+    if (box.ronType == 'BC') {
+      w = ((box.widthBox - 3)/2) + 2;
+    } else {
+      w = ((box.widthBox - 2)/2) + 2;
+    }
+    return w;
+  }
+
+
+
+  static double getVariants(BoxOrder box) {
+
+    if (box.ronType == 'BC') {
+      return 30;
+    } 
+    return 26;
+  }
+
   static Future<BoxOrder> findVenderPaper(BoxOrder box) async {
     List<MaterialPaper> materials = [];
 

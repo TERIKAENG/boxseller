@@ -29,7 +29,7 @@ class _DeliverPageState extends State<DeliverPage> {
         backgroundColor: Color.fromARGB(255, 160, 133, 105),
       ),
       body: FutureBuilder<List<BoxOrder>>(
-        future: GetData().getDataOrder('purchase'),
+        future: GetData().getDataOrder('delliver'),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
