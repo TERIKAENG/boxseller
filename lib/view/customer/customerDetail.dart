@@ -61,7 +61,9 @@ class _CustomerDetailState extends State<CustomerDetail> {
                       const SizedBox(
                         height: 20,
                       ),
-                      ButtonApp.buttonMain(context, ' + สั่งผลิต ', () async {
+                      ButtonApp.buttonMain(
+                          context, ' + ประเมินราคาและวัตถุดิบกระดาษ ',
+                          () async {
                         var res = await Get.to(BoxInputPage(
                           customer: widget.customer,
                         ));
@@ -103,15 +105,20 @@ class _CustomerDetailState extends State<CustomerDetail> {
               //   });
               // }
               return GestureDetector(
-                onTap: () {
-                  Get.to(OrderDetail(
+                onTap: () async {
+                  var res = await Get.to(OrderDetail(
                     order: snapshot.data![index],
                   ));
+
+                  if (res) {
+                    setState(() {});
+                  }
                 },
                 child: Card(
                     child: ListTile(
                   title: Text('ออเดอร์ : ${snapshot.data![index].id}'),
-                  subtitle: Text("${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง\nสถานะ ${snapshot.data![index].status}"),
+                  subtitle: Text(
+                      "${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง\nสถานะ ${snapshot.data![index].status}"),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.brown,

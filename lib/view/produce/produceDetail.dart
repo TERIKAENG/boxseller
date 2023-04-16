@@ -277,7 +277,7 @@ class _ProduceDetailState extends State<ProduceDetail> {
                                     ),
                                   ),
                                   Text(
-                                    'ราคาประเมินจัดซื้อ : ${claculatePriceTOShow(widget.order.materialCalculate![0].calculateMat)} บาท',
+                                    'ราคาประเมินจัดซื้อ : ${claculatePriceTOShow(widget.order.materialCalculate![0].calculateMat).toStringAsFixed(2)} บาท',
                                     style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 16.0,
@@ -285,7 +285,7 @@ class _ProduceDetailState extends State<ProduceDetail> {
                                     ),
                                   ),
                                   Text(
-                                    'ราคาเสนอลูกค้า : ${widget.order.materialCalculate![0].calculateMat.costNet} บาท',
+                                    'ราคาเสนอลูกค้า : ${widget.order.materialCalculate![0].calculateMat.costNet.toStringAsFixed(2)} บาท',
                                     style: const TextStyle(
                                       color: Color.fromARGB(255, 119, 108, 104),
                                       fontSize: 12.0,
@@ -553,7 +553,8 @@ class _ProduceDetailState extends State<ProduceDetail> {
                                   // print(widget.boxOrder.status);
                                   var confirmOrder = widget.order;
                                   confirmOrder.status = 'deliver';
-                                  confirmOrder.updateOrder();
+                                  await confirmOrder.updateOrder();
+                                      Navigator.pop(context, true);
                                 }))
                           ],
                         ),

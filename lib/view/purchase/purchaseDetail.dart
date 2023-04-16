@@ -266,7 +266,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                                     ),
                                   ),
                                   Text(
-                                    'ราคาประเมินจัดซื้อ : ${claculatePriceTOShow(widget.order.materialCalculate![0].calculateMat)} บาท',
+                                    'ราคาประเมินจัดซื้อ : ${claculatePriceTOShow(widget.order.materialCalculate![0].calculateMat).toStringAsFixed(2)} บาท',
                                     style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 16.0,
@@ -274,7 +274,7 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                                     ),
                                   ),
                                   Text(
-                                    'ราคาเสนอลูกค้า : ${widget.order.materialCalculate![0].calculateMat.costNet} บาท',
+                                    'ราคาเสนอลูกค้า : ${widget.order.materialCalculate![0].calculateMat.costNet.toStringAsFixed(2)} บาท',
                                     style: const TextStyle(
                                       color: Color.fromARGB(255, 119, 108, 104),
                                       fontSize: 12.0,
@@ -360,7 +360,8 @@ class _PurchaseDetailState extends State<PurchaseDetail> {
                                   // print(widget.boxOrder.status);
                                   var confirmOrder = widget.order;
                                   confirmOrder.status = 'produce';
-                                  confirmOrder.updateOrder();
+                                  await confirmOrder.updateOrder();
+                                  Navigator.pop(context, true);
                                 }))
                           ],
                         ),
@@ -709,7 +710,7 @@ Future<void> _createTrackPDF(BoxOrder order) async {
   // contentGrid = _addContentRow('5', contentGrid, format, middleFormat, padding);
   //Add a new row
   final PdfGridRow totalRow = contentGrid.rows.add();
-  totalRow.cells[0].value = 'ราคารวม ( บาท )';
+  totalRow.cells[0].value = '';
   //Set column span
   totalRow.cells[0].columnSpan = 3;
   totalRow.cells[0].style.stringFormat = format;

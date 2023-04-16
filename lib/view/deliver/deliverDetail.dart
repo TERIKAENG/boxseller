@@ -347,7 +347,8 @@ class _DeliverDetailState extends State<DeliverDetail> {
                                     context, 'จัดส่งสำเร็จ', () async {
                                   var confirmOrder = widget.order;
                                   confirmOrder.status = 'done';
-                                  confirmOrder.updateOrder();
+                                  await confirmOrder.updateOrder();
+                                     Navigator.pop(context, true);
                                 }))
                           ],
                         ),

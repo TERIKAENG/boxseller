@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../get/getData.dart';
 import '../../model/customer.dart';
@@ -19,6 +20,11 @@ class ProducePage extends StatefulWidget {
 }
 
 class _ProducePageState extends State<ProducePage> {
+
+
+   var formatter =  DateFormat('dd/MM/yyyy');
+
+   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,16 +42,19 @@ class _ProducePageState extends State<ProducePage> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: () {
-                    Get.to(ProduceDetail(
+                  onTap: () async {
+                    var res = await Get.to(ProduceDetail(
                       order: snapshot.data![index],
                     ));
+                    if (res) {
+                      setState(() {});
+                    }
                   },
                   child: Card(
                       child: ListTile(
                     title: Text('ออเดอร์ : ${snapshot.data![index].id}'),
                     subtitle: Text(
-                        "${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง\n สถานะ : ${snapshot.data![index].status}"),
+                        "${snapshot.data![index].name}\nจำนวน ${snapshot.data![index].orderAmount} กล่อง\nสถานะ : ${snapshot.data![index].status}\nวันจัดส่ง : ${formatter.format(snapshot.data![index].materialCalculate![0].calculateMat.deliverDate!)}"),
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.brown,

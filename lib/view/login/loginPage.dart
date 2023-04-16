@@ -15,12 +15,12 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        // decoration: const BoxDecoration(
-        //   image: DecorationImage(
-        //     image: AssetImage("asset/images/login.png"),
-        //     fit: BoxFit.cover,
-        //   ),
-        // ),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("asset/images/login.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Center(
           child: Container(
             width: 400,
@@ -90,7 +90,7 @@ class LoginPage extends StatelessWidget {
                         } else {
                           print(e.code);
                           const snackBar = SnackBar(
-                            content: Text('กรุณากรอกบัญชีผู้ใช้ให้ถูกต้อง'),
+                            content: Text('กรุณากรอกบัญชีผู้ใช้/รหัสผ่านให้ถูกต้อง'),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }

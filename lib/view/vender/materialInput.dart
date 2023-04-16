@@ -124,6 +124,7 @@ class _MeaterialInputState extends State<MeaterialInput> {
                             venderName: widget.vender.name,
                             widthPaper: width,
                             calculateMat: CalculateMat(
+                                deliverDate: DateTime.now(),
                                 pricePerBox: 0,
                                 paperAmount: 0,
                                 boxAmount: 0,

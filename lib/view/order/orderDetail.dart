@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -331,7 +332,8 @@ class _Tab1State extends State<Tab1> {
                                         confirmOrder.materialCalculate = [];
                                         confirmOrder.materialCalculate!
                                             .add(widget.listPaper[index]);
-                                        confirmOrder.updateOrder();
+                                        await confirmOrder.updateOrder();
+                                         Navigator.pop(context, true);
                                       }),
                                     ),
                                   ],
