@@ -21,7 +21,34 @@ class ButtonApp {
         ));
   }
 
-   static Widget buttonMainNext(
+  static Widget buttonMainWithIcon(
+      BuildContext context, String title, GestureTapCallback onPressed, IconData icons) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+              color: brownlight,
+              border: Border.all(
+                color: brownlight,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Center(
+              child: Row(
+            children: [
+              Icon(
+                icons,
+                size: 24.0,
+              ),
+              SizedBox(width: 5,),
+              Expanded(child: TextWidget.textGeneralWithColor(title, Colors.white)),
+            ],
+          )),
+        ));
+  }
+
+  static Widget buttonMainNext(
       BuildContext context, String title, GestureTapCallback onPressed) {
     return TextButton(
         onPressed: onPressed,
