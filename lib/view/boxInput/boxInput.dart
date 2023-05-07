@@ -28,6 +28,8 @@ class _BoxInputPageState extends State<BoxInputPage> {
   double productWeight = 0;
   late String _selectedUnit = 'cm';
 
+  bool validateDeliver = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +65,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         });
                       }
 
-                      if (productWieghtController.text == '' &&
+                      if (productWieghtController.text == '' ||
                           productWieghtController.text == '0') {
                         setState(() {
                           productWeightValidator = false;
@@ -71,7 +73,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         });
                       }
 
-                      if (amountOrderController.text == '' &&
+                      if (amountOrderController.text == '' ||
                           amountOrderController.text == '0') {
                         setState(() {
                           amountOrderValidator = false;
@@ -79,7 +81,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         });
                       }
 
-                      if (widthBoxController.text == '' &&
+                      if (widthBoxController.text == '' ||
                           widthBoxController.text == '0') {
                         setState(() {
                           widthBoxValidator = false;
@@ -87,7 +89,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         });
                       }
 
-                      if (longBoxController.text == '' &&
+                      if (longBoxController.text == '' ||
                           longBoxController.text == '0') {
                         setState(() {
                           longBoxValidator = false;
@@ -95,7 +97,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         });
                       }
 
-                      if (heightBoxController.text == '' &&
+                      if (heightBoxController.text == '' ||
                           heightBoxController.text == '0') {
                         setState(() {
                           heightBoxValidator = false;
@@ -104,7 +106,59 @@ class _BoxInputPageState extends State<BoxInputPage> {
                       }
 
                       if (deco == 1) {
-                        if (printAreaController.text == '' &&
+                        if (printAreaController.text == '' ||
+                            printAreaController.text == '0') {
+                          setState(() {
+                            printAreaValidator = false;
+                            valid = false;
+                          });
+                        }
+                      }
+
+                      if (deliver == -1) {
+                        setState(() {
+                          validateDeliver = false;
+                          valid = false;
+                        });
+                      }
+
+                      if (moistureProduct == -1) {
+                        setState(() {
+                          validateMoistureProduct = false;
+                          valid = false;
+                        });
+                      }
+
+                      if (moistureWarehouse == -1) {
+                        setState(() {
+                          validateMoistureWarehouse = false;
+                          valid = false;
+                        });
+                      }
+
+                      if (concernIn == -1) {
+                        setState(() {
+                          validateConcernIn = false;
+                          valid = false;
+                        });
+                      }
+
+                      if (deco == -1) {
+                        setState(() {
+                          validateDeco = false;
+                          valid = false;
+                        });
+                      }
+
+                      if (deco == 1 || deco == 2) {
+                        if (decoColor == '') {
+                          setState(() {
+                            validateDecoColor = false;
+                            valid = false;
+                          });
+                        }
+
+                        if (printAreaController.text == '' ||
                             printAreaController.text == '0') {
                           setState(() {
                             printAreaValidator = false;
@@ -129,34 +183,34 @@ class _BoxInputPageState extends State<BoxInputPage> {
 
                       if (valid) {
                         BoxOrder newOrder = BoxOrder(
-                          name: productName,
-                          weightProduct: productWeight,
-                          widthBox: widthBox,
-                          longBox: longBox,
-                          heightBox: heightBox,
-                          unit: 1,
-                          orderAmount: amountOrder,
-                          isHumidityProduct: moistureProduct,
-                          isHumidityWarehouse: moistureWarehouse,
-                          amount_stack_warehouse: isStack,
-                          useDesignService: deco,
-                          isSharpPrint: concernIn,
-                          isUseColorOver: isOverColor,
-                          artwork: 'artwork',
-                          isDeliveryProduct: deliver,
-                          widthTemplate: 0,
-                          heightTemplate: 0,
-                          empId: 'admin',
-                          status: 'estimate',
-                          paper: paper,
-                          customer: widget.customer.id!,
-                          customerAddress: widget.customer.address,
-                          customerName: widget.customer.name,
-                          customerTel: widget.customer.tel,
-                          codeColor: decoColor,
-                          printArea: printArea
-                          // timestamp: DateTime.now()
-                        );
+                            name: productName,
+                            weightProduct: productWeight,
+                            widthBox: widthBox,
+                            longBox: longBox,
+                            heightBox: heightBox,
+                            unit: 1,
+                            orderAmount: amountOrder,
+                            isHumidityProduct: moistureProduct,
+                            isHumidityWarehouse: moistureWarehouse,
+                            amount_stack_warehouse: isStack,
+                            useDesignService: deco,
+                            isSharpPrint: concernIn,
+                            isUseColorOver: isOverColor,
+                            artwork: 'artwork',
+                            isDeliveryProduct: deliver,
+                            widthTemplate: 0,
+                            heightTemplate: 0,
+                            empId: 'admin',
+                            status: 'estimate',
+                            paper: paper,
+                            customer: widget.customer.id!,
+                            customerAddress: widget.customer.address,
+                            customerName: widget.customer.name,
+                            customerTel: widget.customer.tel,
+                            codeColor: decoColor,
+                            printArea: printArea
+                            // timestamp: DateTime.now()
+                            );
 
                         var findRon = Algorithm.findPapertype(newOrder);
                         newOrder.ronType = findRon;
@@ -167,8 +221,9 @@ class _BoxInputPageState extends State<BoxInputPage> {
                         }).catchError((error) {
                           print('ERROR : $error');
                         });
-
+          
                         print(newOrder);
+                       
 
                         newOrder.newOrder();
                         Navigator.pop(context, true);
@@ -269,12 +324,12 @@ class _BoxInputPageState extends State<BoxInputPage> {
         paperType(),
         Row(
           children: [
-            TextWidget.textSubTitle('ขนาดของวัตถุดิบกระดาษ'),
+            TextWidget.textSubTitle('ขนาดของกล่อง'),
           ],
         ),
         Row(
           children: [
-            TextWidget.textSubTitle('หน่วย : ขนาดของวัตถุดิบกระดาษ'),
+            TextWidget.textSubTitle('หน่วย : ขนาดของกล่อง'),
             const SizedBox(
               width: 20,
             ),
@@ -358,6 +413,9 @@ class _BoxInputPageState extends State<BoxInputPage> {
         Row(
           children: [
             TextWidget.textSubTitle('บรรจุภัณฑ์ต้องผ่านกระบวนการจัดส่ง'),
+            validateDeliver
+                ? Container()
+                : TextWidget.textGeneralWithColor(' *กรุณาระบุ', Colors.red),
           ],
         ),
         Column(
@@ -391,12 +449,16 @@ class _BoxInputPageState extends State<BoxInputPage> {
   }
 
   int moistureProduct = -1;
+  bool validateMoistureProduct = true;
   Widget moistureProductCheck() {
     return Column(
       children: [
         Row(
           children: [
             TextWidget.textSubTitle('ความชื้นของผลิตภัณฑ์'),
+            validateMoistureProduct
+                ? Container()
+                : TextWidget.textGeneralWithColor(' *กรุณาระบุ', Colors.red),
           ],
         ),
         Column(
@@ -441,12 +503,16 @@ class _BoxInputPageState extends State<BoxInputPage> {
   }
 
   int moistureWarehouse = -1;
+  bool validateMoistureWarehouse = true;
   Widget moistureWarehouseCheck() {
     return Column(
       children: [
         Row(
           children: [
             TextWidget.textSubTitle('คลังที่จัดเก็บมีความชื้นหรือไม่'),
+            validateMoistureWarehouse
+                ? Container()
+                : TextWidget.textGeneralWithColor(' *กรุณาระบุ', Colors.red),
           ],
         ),
         Column(
@@ -490,7 +556,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
         ),
         CheckboxListTile(
           activeColor: brownDark,
-          title: const Text("ซ้อนกันในคลังที่จัดเก็บมากกว่า 5 ชิ้น"),
+          title: const Text("ซ้อนกล่องกันในคลังที่จัดเก็บมากกว่า 5 ชิ้น"),
           value: isStack,
           onChanged: (newValue) {
             setState(() {
@@ -505,13 +571,16 @@ class _BoxInputPageState extends State<BoxInputPage> {
   }
 
   int concernIn = -1;
+  bool validateConcernIn = true;
   Widget concernInCheck() {
     return Column(
       children: [
         Row(
           children: [
-            TextWidget.textSubTitle(
-                'ความต้องการเพิ่มเติม : คุณสมบัติด้านบรรจุภัณฑ์'),
+            TextWidget.textSubTitle('คุณสมบัติด้านบรรจุภัณฑ์'),
+            validateConcernIn
+                ? Container()
+                : TextWidget.textGeneralWithColor(' *กรุณาระบุ', Colors.red),
           ],
         ),
         Column(
@@ -642,19 +711,23 @@ class _BoxInputPageState extends State<BoxInputPage> {
   }
 
   int deco = -1;
+  bool validateDeco = true;
   Widget decoyCheck() {
     return Column(
       children: [
         Row(
           children: [
-            TextWidget.textSubTitle('ระบุลวดลาย'),
+            TextWidget.textSubTitle('การใช้บริการพิมพ์ลายกล่อง'),
+            validateDeco
+                ? Container()
+                : TextWidget.textGeneralWithColor(' *กรุณาระบุ', Colors.red),
           ],
         ),
         Column(
           children: [
             RadioListTile(
               activeColor: brownDark,
-              title: Text("ใช้บริการของทางร้าน"),
+              title: Text("ใช้บริการออกแบบของทางร้าน"),
               value: 2,
               groupValue: deco,
               onChanged: (value) {
@@ -665,7 +738,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
             ),
             RadioListTile(
               activeColor: brownDark,
-              title: Text("มีลวดลายเเล้ว"),
+              title: Text("ลูกค้ามีลวดลายเเล้ว"),
               value: 1,
               groupValue: deco,
               onChanged: (value) {
@@ -693,6 +766,8 @@ class _BoxInputPageState extends State<BoxInputPage> {
   }
 
   String decoColor = '';
+  bool validateDecoColor = true;
+
   double printArea = 0.0;
   var printAreaValidator = true;
   var printAreaController = TextEditingController();
@@ -703,6 +778,9 @@ class _BoxInputPageState extends State<BoxInputPage> {
         Row(
           children: [
             TextWidget.textSubTitle('สีหมึกพิมพิมพ์'),
+            validateDecoColor
+                ? Container()
+                : TextWidget.textGeneralWithColor(' *กรุณาระบุ', Colors.red),
           ],
         ),
         Column(
@@ -765,9 +843,7 @@ class _BoxInputPageState extends State<BoxInputPage> {
             Edittext.edittextNumber('พื้นที่การพิมพ์สี', 'ตารางนิ้ว', (value) {
               try {
                 printArea = double.parse(value);
-              } catch (e) {
-                longBoxController.text = '0';
-              }
+              } catch (e) {}
             }, printAreaValidator, printAreaController)
           ],
         )

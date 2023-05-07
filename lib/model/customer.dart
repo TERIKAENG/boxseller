@@ -32,6 +32,20 @@ class Customer {
         .catchError((error) => print("Failed to add Order: $error"));
   }
 
+  Future<void> updateCustomer() async {
+    // Call the user's CollectionReference to add a new user
+    customers
+        .doc(id)
+        .update({
+          'name': name,
+          'tel': tel,
+          'address': address,
+          // 'timestamp': timestamp
+        })
+        .then((value) => print("Order Added"))
+        .catchError((error) => print("Failed to add Order: $error"));
+  }
+
   Customer copyWith({
     String? name,
     String? tel,
@@ -66,7 +80,8 @@ class Customer {
 
   String toJson() => json.encode(toMap());
 
-  factory Customer.fromJson(String source) => Customer.fromMap(json.decode(source));
+  factory Customer.fromJson(String source) =>
+      Customer.fromMap(json.decode(source));
 
   @override
   String toString() {

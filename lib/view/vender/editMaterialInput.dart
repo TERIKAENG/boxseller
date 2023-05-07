@@ -1,10 +1,11 @@
-import 'package:boxseller/Utils/Palette.dart';
-import 'package:boxseller/model/calculateMat.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+
+import 'package:boxseller/Utils/Palette.dart';
+import 'package:boxseller/model/calculateMat.dart';
 
 import '../../model/material.dart';
 import '../../model/vender.dart';
@@ -13,20 +14,108 @@ import '../../widget/edittext.dart';
 import '../../widget/logo.dart';
 import '../../widget/text_widget.dart';
 
-class MeaterialInput extends StatefulWidget {
+class EditMeaterialInput extends StatefulWidget {
   Vender vender;
+  MaterialPaper material;
 
-  MeaterialInput({
+  EditMeaterialInput({
     Key? key,
     required this.vender,
+    required this.material,
   }) : super(key: key);
 
   @override
-  State<MeaterialInput> createState() => _MeaterialInputState();
+  State<EditMeaterialInput> createState() => _EditMeaterialInputState();
 }
 
-class _MeaterialInputState extends State<MeaterialInput> {
+class _EditMeaterialInputState extends State<EditMeaterialInput> {
   late String _selectedUnit = 'cm';
+
+  String layer1 = '';
+  bool layer1Validator = true;
+  TextEditingController layer1Controller = TextEditingController();
+
+  String layer2 = '';
+  bool layer2Validator = true;
+  TextEditingController layer2Controller = TextEditingController();
+
+  String layer3 = '';
+  bool layer3Validator = true;
+  TextEditingController layer3Controller = TextEditingController();
+
+  String layer4 = '';
+  bool layer4Validator = true;
+  TextEditingController layer4Controller = TextEditingController();
+
+  String layer5 = '';
+  bool layer5Validator = true;
+  TextEditingController layer5Controller = TextEditingController();
+
+  double width = 0;
+  bool widthValidator = true;
+  TextEditingController widthController = TextEditingController();
+
+  double height = 0;
+  bool heightValidator = true;
+  TextEditingController heightController = TextEditingController();
+
+  double price = 0;
+  bool priceValidator = true;
+  TextEditingController priceController = TextEditingController();
+
+  int minimum = 0;
+  bool minimumValidator = true;
+  TextEditingController minimumController = TextEditingController();
+
+  int deliverIndays = 0;
+  bool deliverIndaysValidator = true;
+  TextEditingController deliverIndaysController = TextEditingController();
+
+  String ron = '';
+
+  bool colorPaperValidator = true;
+  bool ronValidator = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    layer1 = widget.material.layer1;
+    layer1Controller.text = widget.material.layer1;
+
+    layer2 = widget.material.layer2;
+    layer2Controller.text = widget.material.layer2;
+
+    layer3 = widget.material.layer3;
+    layer3Controller.text = widget.material.layer3;
+
+    if (widget.material.ronType == 'BC') {
+      layer4 = widget.material.layer4;
+      layer4Controller.text = widget.material.layer4;
+
+      layer5 = widget.material.layer5;
+      layer5Controller.text = widget.material.layer5;
+    }
+
+    width = widget.material.widthPaper * 0.1;
+    widthController.text = '${widget.material.widthPaper}';
+
+    height = widget.material.heightPaper * 0.1;
+    heightController.text = '${widget.material.heightPaper}';
+
+    price = widget.material.pricePaper;
+    priceController.text = '${widget.material.pricePaper}';
+
+    minimum = widget.material.minimumPaper;
+    minimumController.text = '${widget.material.minimumPaper}';
+
+    deliverIndays = widget.material.deliverIndays;
+    deliverIndaysController.text = '${widget.material.deliverIndays}';
+
+    ron = widget.material.ronType;
+    paper = widget.material.paperType;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +142,7 @@ class _MeaterialInputState extends State<MeaterialInput> {
                     //   boxForm(),
                     //   lineSep(),
                     //   decoForm(),
-                    ButtonApp.buttonMain(context, 'เพิ่มวัตถุดิบกระดาษ',
+                    ButtonApp.buttonMain(context, 'อัพเดทข้อมูลวัตถุดิบกระดาษ',
                         () async {
                       bool valid = true;
 
@@ -172,6 +261,7 @@ class _MeaterialInputState extends State<MeaterialInput> {
 
                       if (valid) {
                         MaterialPaper newMaterial = MaterialPaper(
+                            id: widget.material.id,
                             deliverIndays: deliverIndays,
                             heightPaper: height,
                             layer1: layer1,
@@ -194,7 +284,7 @@ class _MeaterialInputState extends State<MeaterialInput> {
                                 costNet: 0,
                                 bestestTemplate: {}));
 
-                        await newMaterial.newMaterial();
+                        await newMaterial.updateMaterial();
                         Navigator.pop(context, true);
                       }
                     }),
@@ -227,51 +317,6 @@ class _MeaterialInputState extends State<MeaterialInput> {
   Widget header() {
     return TextWidget.textGeneral('รายการวัตถุดิบกระดาษใหม่');
   }
-
-  String layer1 = '';
-  bool layer1Validator = true;
-  TextEditingController layer1Controller = TextEditingController();
-
-  String layer2 = '';
-  bool layer2Validator = true;
-  TextEditingController layer2Controller = TextEditingController();
-
-  String layer3 = '';
-  bool layer3Validator = true;
-  TextEditingController layer3Controller = TextEditingController();
-
-  String layer4 = '';
-  bool layer4Validator = true;
-  TextEditingController layer4Controller = TextEditingController();
-
-  String layer5 = '';
-  bool layer5Validator = true;
-  TextEditingController layer5Controller = TextEditingController();
-
-  double width = 0;
-  bool widthValidator = true;
-  TextEditingController widthController = TextEditingController();
-
-  double height = 0;
-  bool heightValidator = true;
-  TextEditingController heightController = TextEditingController();
-
-  double price = 0;
-  bool priceValidator = true;
-  TextEditingController priceController = TextEditingController();
-
-  int minimum = 0;
-  bool minimumValidator = true;
-  TextEditingController minimumController = TextEditingController();
-
-  int deliverIndays = 0;
-  bool deliverIndaysValidator = true;
-  TextEditingController deliverIndaysController = TextEditingController();
-
-  String ron = '';
-
-  bool colorPaperValidator = true;
-  bool ronValidator = true;
 
   Widget productForm() {
     return Column(

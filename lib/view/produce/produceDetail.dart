@@ -49,6 +49,8 @@ class _ProduceDetailState extends State<ProduceDetail> {
   // to save image bytes of widget
   Uint8List? bytes;
 
+  bool loading = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -59,512 +61,577 @@ class _ProduceDetailState extends State<ProduceDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("รายการสั่งผลิตรอจัดซื้อ"),
+        title: const Text("รายการสั่งผลิตรอผลิต"),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-                child: Padding(
-              padding: const EdgeInsets.all(15.0),
+      body: loading
+          ? const Center(
+              child: SizedBox(
+                  width: 200, height: 200, child: CircularProgressIndicator()))
+          : SingleChildScrollView(
               child: Column(
                 children: [
-                  TextWidget.textGeneralWithColor('ข้อมูลผลิตภัณฑ์', brownDark),
-                  Row(
-                    children: [
-                      TextWidget.textGeneralWithColor(
-                          'ข้อมูลผลิตภัณฑ์', brownDark),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneral(
-                          'ชื่อผลิตภัณฑ์ : ${widget.order.name}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneral(
-                          'น้ำหนักของผลิตภัณฑ์ : ${widget.order.weightProduct}'),
-                    ],
-                  ),
-                  widget.order.isDeliveryProduct == 1
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'บรรจุภัณฑ์ต้องผ่านกระบวนการจัดส่ง : ใช่'),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'บรรจุภัณฑ์ต้องผ่านกระบวนการจัดส่ง : ไม่ใช่'),
-                          ],
-                        ),
-                  widget.order.isHumidityProduct == 2
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'ความชื้นของผลิตภัณฑ์ : ชื้น'),
-                          ],
-                        )
-                      : widget.order.isHumidityProduct == 1
-                          ? Row(
-                              children: [
-                                TextWidget.textGeneral(
-                                    'ความชื้นของผลิตภัณฑ์ : ชื้นเล็กน้อย'),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                TextWidget.textGeneral(
-                                    'ความชื้นของผลิตภัณฑ์ : ไม่ชื้น'),
-                              ],
-                            ),
-                  widget.order.isHumidityWarehouse == 1
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'คลังที่จัดเก็บมีความชื้นหรือไม่ : ชื้น'),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'คลังที่จัดเก็บมีความชื้นหรือไม่ : ไม่ชื้น'),
-                          ],
-                        ),
-                  widget.order.amount_stack_warehouse == true
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'ซ้อนกันในคลังที่จัดเก็บมากกว่า 5 ชิ้น : ใช่'),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'ซ้อนกันในคลังที่จัดเก็บมากกว่า 5 ชิ้น : ไม่ใช่'),
-                          ],
-                        ),
-                  widget.order.isSharpPrint == 1
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'ความต้องการเพิ่มเติม : เน้นลวดลาย'),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'ความต้องการเพิ่มเติม : เน้นความเเข็งเเรง'),
-                          ],
-                        ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneralWithColor(
-                          'ข้อมูลบรรจุภัณฑ์ที่ต้องการสั่งผลิต', brownDark),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneral(
-                          'จำนวนที่ต้องการสั่งผลิต (ชิ้น) : ${widget.order.orderAmount}'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneral(
-                          'กว้าง : ${widget.order.widthBox} มิลลิเมตร'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneral(
-                          'ยาว : ${widget.order.longBox} มิลลิเมตร'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneral(
-                          'สูง : ${widget.order.heightBox} มิลลิเมตร'),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      TextWidget.textGeneralWithColor(
-                          'ลวดลายของบรรจุภัณฑ์', brownDark),
-                    ],
-                  ),
-                  widget.order.isUseColorOver == true
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'พิมพ์สีทั่วทั้งพื้นผิวกล่อง : ใช่'),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'พิมพ์สีทั่วทั้งพื้นผิวกล่อง : ไม่'),
-                          ],
-                        ),
-                  widget.order.useDesignService == 2
-                      ? Row(
-                          children: [
-                            TextWidget.textGeneral(
-                                'ระบุลวดลาย : ใช้บริการของทางร้าน'),
-                          ],
-                        )
-                      : widget.order.useDesignService == 1
-                          ? Row(
-                              children: [
-                                TextWidget.textGeneral(
-                                    'ระบุลวดลาย : มีลวดลายเเล้ว'),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                TextWidget.textGeneral(
-                                    'ระบุลวดลาย : ไม่พิมพ์ลวดลาย'),
-                              ],
-                            ),
-                ],
-              ),
-            )),
-            Card(
-              child: Container(
-                  color: Colors.white,
-                  child: ListTile(
-                    title: Column(
+                  Card(
+                      child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
                       children: [
+                        TextWidget.textGeneralWithColor(
+                            'ข้อมูลผลิตภัณฑ์', brownDark),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              child: const Center(
-                                child: Text(
-                                  '*',
-                                  style: TextStyle(
-                                    color: Colors.brown,
-                                    fontSize: 40.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            TextWidget.textGeneralWithColor(
+                                'ข้อมูลผลิตภัณฑ์', brownDark),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneral(
+                                'ชื่อผลิตภัณฑ์ : ${widget.order.name}'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneral(
+                                'น้ำหนักของผลิตภัณฑ์ : ${widget.order.weightProduct}'),
+                          ],
+                        ),
+                        widget.order.isDeliveryProduct == 1
+                            ? Row(
                                 children: [
-                                  Text(
-                                    widget
-                                        .order.materialCalculate![0].venderName,
-                                    style: const TextStyle(
-                                      color: Colors.brown,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
+                                  TextWidget.textGeneral(
+                                      'บรรจุภัณฑ์ต้องผ่านกระบวนการจัดส่ง : ใช่'),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'บรรจุภัณฑ์ต้องผ่านกระบวนการจัดส่ง : ไม่ใช่'),
+                                ],
+                              ),
+                        widget.order.isHumidityProduct == 2
+                            ? Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'ความชื้นของผลิตภัณฑ์ : ชื้น'),
+                                ],
+                              )
+                            : widget.order.isHumidityProduct == 1
+                                ? Row(
+                                    children: [
+                                      TextWidget.textGeneral(
+                                          'ความชื้นของผลิตภัณฑ์ : ชื้นเล็กน้อย'),
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      TextWidget.textGeneral(
+                                          'ความชื้นของผลิตภัณฑ์ : ไม่ชื้น'),
+                                    ],
+                                  ),
+                        widget.order.isHumidityWarehouse == 1
+                            ? Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'คลังที่จัดเก็บมีความชื้นหรือไม่ : ชื้น'),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'คลังที่จัดเก็บมีความชื้นหรือไม่ : ไม่ชื้น'),
+                                ],
+                              ),
+                        widget.order.amount_stack_warehouse == true
+                            ? Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'ซ้อนกันในคลังที่จัดเก็บมากกว่า 5 ชิ้น : ใช่'),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'ซ้อนกันในคลังที่จัดเก็บมากกว่า 5 ชิ้น : ไม่ใช่'),
+                                ],
+                              ),
+                        widget.order.isSharpPrint == 1
+                            ? Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'ความต้องการเพิ่มเติม : เน้นลวดลาย'),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'ความต้องการเพิ่มเติม : เน้นความเเข็งเเรง'),
+                                ],
+                              ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneralWithColor(
+                                'ข้อมูลบรรจุภัณฑ์ที่ต้องการสั่งผลิต',
+                                brownDark),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneral(
+                                'จำนวนที่ต้องการสั่งผลิต (ชิ้น) : ${widget.order.orderAmount}'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneral(
+                                'กว้าง : ${widget.order.widthBox} มิลลิเมตร'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneral(
+                                'ยาว : ${widget.order.longBox} มิลลิเมตร'),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneral(
+                                'สูง : ${widget.order.heightBox} มิลลิเมตร'),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            TextWidget.textGeneralWithColor(
+                                'ลวดลายของบรรจุภัณฑ์', brownDark),
+                          ],
+                        ),
+                        widget.order.isUseColorOver == true
+                            ? Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'พิมพ์สีทั่วทั้งพื้นผิวกล่อง : ใช่'),
+                                ],
+                              )
+                            : Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'พิมพ์สีทั่วทั้งพื้นผิวกล่อง : ไม่'),
+                                ],
+                              ),
+                        widget.order.useDesignService == 2
+                            ? Row(
+                                children: [
+                                  TextWidget.textGeneral(
+                                      'ระบุลวดลาย : ใช้บริการของทางร้าน'),
+                                ],
+                              )
+                            : widget.order.useDesignService == 1
+                                ? Row(
+                                    children: [
+                                      TextWidget.textGeneral(
+                                          'ระบุลวดลาย : มีลวดลายเเล้ว'),
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      TextWidget.textGeneral(
+                                          'ระบุลวดลาย : ไม่พิมพ์ลวดลาย'),
+                                    ],
+                                  ),
+                      ],
+                    ),
+                  )),
+                  Card(
+                    child: Container(
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    child: const Center(
+                                      child: Text(
+                                        '*',
+                                        style: TextStyle(
+                                          color: Colors.brown,
+                                          fontSize: 40.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Text(
-                                    'ราคาประเมินจัดซื้อ : ${claculatePriceTOShow(widget.order.materialCalculate![0].calculateMat).toStringAsFixed(2)} บาท',
-                                    style: const TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.order.materialCalculate![0]
+                                              .venderName,
+                                          style: const TextStyle(
+                                            color: Colors.brown,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'ราคาประเมินจัดซื้อ : ${claculatePriceTOShow(widget.order.materialCalculate![0].calculateMat).toStringAsFixed(2)} บาท',
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'ราคาเสนอลูกค้า : ${widget.order.materialCalculate![0].calculateMat.costNet.toStringAsFixed(2)} บาท',
+                                          style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 119, 108, 104),
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'ราคาต่อกล่อง : ${widget.order.materialCalculate![0].calculateMat.pricePerBox.toStringAsFixed(2)} บาท',
+                                          style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 119, 108, 104),
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'จำนวนกล่องที่ได้ : ${widget.order.materialCalculate![0].calculateMat.boxAmount} กล่อง',
+                                          style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 119, 108, 104),
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'จำนวนกระดาษที่ต้องสั่ง : ${widget.order.materialCalculate![0].calculateMat.paperAmount} แผ่น',
+                                          style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 119, 108, 104),
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    'ราคาเสนอลูกค้า : ${widget.order.materialCalculate![0].calculateMat.costNet.toStringAsFixed(2)} บาท',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 119, 108, 104),
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'ราคาต่อกล่อง : ${widget.order.materialCalculate![0].calculateMat.pricePerBox.toStringAsFixed(2)} บาท',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 119, 108, 104),
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'จำนวนกล่องที่ได้ : ${widget.order.materialCalculate![0].calculateMat.boxAmount} กล่อง',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 119, 108, 104),
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'จำนวนกระดาษที่ต้องสั่ง : ${widget.order.materialCalculate![0].calculateMat.paperAmount} แผ่น',
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 119, 108, 104),
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold,
+                                  WidgetsToImage(
+                                    controller: controller,
+                                    child: Container(
+                                      margin: const EdgeInsets.all(4.0),
+                                      child: CustomPaint(
+                                        painter: MyRectanglePainter(
+                                            calculateMat: widget
+                                                .order
+                                                .materialCalculate![0]
+                                                .calculateMat,
+                                            height: widget
+                                                .order
+                                                .materialCalculate![0]
+                                                .heightPaper,
+                                            width: widget
+                                                .order
+                                                .materialCalculate![0]
+                                                .widthPaper),
+                                        size: Size(
+                                            widget.order.materialCalculate![0]
+                                                    .widthPaper *
+                                                0.1,
+                                            widget.order.materialCalculate![0]
+                                                    .heightPaper *
+                                                0.1),
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                            WidgetsToImage(
-                              controller: controller,
-                              child: Container(
-                                margin: const EdgeInsets.all(4.0),
-                                child: CustomPaint(
-                                  painter: MyRectanglePainter(
-                                      calculateMat: widget.order
-                                          .materialCalculate![0].calculateMat,
-                                      height: widget.order.materialCalculate![0]
-                                          .heightPaper,
-                                      width: widget.order.materialCalculate![0]
-                                          .widthPaper),
-                                  size: Size(
-                                      widget.order.materialCalculate![0]
-                                              .widthPaper *
-                                          0.1,
-                                      widget.order.materialCalculate![0]
-                                              .heightPaper *
-                                          0.1),
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    padding: EdgeInsets.all(10),
+                                    child: ButtonApp.buttonMain(
+                                        context, 'ใบเเบบตัด', () async {
+                                      setState(() {
+                                        loading = true;
+                                      });
+                                      final PdfStringFormat format =
+                                          PdfStringFormat(
+                                              alignment:
+                                                  PdfTextAlignment.center,
+                                              lineAlignment:
+                                                  PdfVerticalAlignment.middle);
+
+                                      var now = new DateTime.now();
+                                      var formatter =
+                                          new DateFormat('dd/MM/yyyy');
+                                      String formattedDate =
+                                          formatter.format(now);
+                                      final bytes = await controller.capture();
+
+                                      String propmtregular =
+                                          "asset/font/Prompt-Regular.ttf"; //path to asset
+                                      ByteData prom =
+                                          await rootBundle.load(propmtregular);
+                                      Uint8List soundbytes = prom.buffer
+                                          .asUint8List(prom.offsetInBytes,
+                                              prom.lengthInBytes);
+                                      PdfFont font =
+                                          PdfTrueTypeFont(soundbytes, 12);
+
+                                      String header = 'ใบเเบบตัด';
+                                      String header2 = 'แนวการตัด';
+                                      String header3 = 'แนวสับ/พับ';
+
+                                      PdfFont h1font =
+                                          PdfTrueTypeFont(soundbytes, 20);
+
+                                      PdfFont h2font =
+                                          PdfTrueTypeFont(soundbytes, 16);
+
+                                      String paragraphText =
+                                          'ชื่อลูกค้า :  ${widget.order.customerName}\nวันจัดส่ง: ${formatter.format(widget.order.materialCalculate![0].calculateMat.deliverDate!)}\nกล่องฝาชน (${widget.order.name}) ขนาดต่อกล่อง ${widget.order.widthTemplate * 0.1} x ${widget.order.heightTemplate * 0.1} ซม.\nขนาดวัตถุดิบกระดาษ ${widget.order.materialCalculate![0].widthPaper * 0.1} x ${widget.order.materialCalculate![0].heightPaper * 0.1} ซม.';
+
+                                      String widthText =
+                                          '      ${Algorithm.getWidth_Variants(widget.order) * 0.1}           ${widget.order.longBox * 0.1}           ${widget.order.widthBox * 0.1}           ${widget.order.longBox * 0.1}         ${Algorithm.getVariants(widget.order) * 0.1}      เซนติเมตร';
+
+                                      String heightText =
+                                          '${(Algorithm.getHeight_Variants(widget.order) * 0.1).toStringAsFixed(2)} \n\n${widget.order.widthBox * 0.1} \n\n${(Algorithm.getHeight_Variants(widget.order) * 0.1).toStringAsFixed(2)}';
+
+                                      final PdfDocument document =
+                                          PdfDocument();
+
+                                      final PdfPage page = document.pages.add();
+
+                                      final PdfLayoutResult layoutResultHeader =
+                                          PdfTextElement(
+                                                  text: header,
+                                                  font: h1font,
+                                                  brush: PdfSolidBrush(
+                                                      PdfColor(0, 0, 0)))
+                                              .draw(
+                                                  page: page,
+                                                  bounds: Rect.fromLTWH(
+                                                      0,
+                                                      0,
+                                                      page
+                                                          .getClientSize()
+                                                          .width,
+                                                      page
+                                                          .getClientSize()
+                                                          .height),
+                                                  format: PdfLayoutFormat(
+                                                      layoutType: PdfLayoutType
+                                                          .paginate))!;
+
+                                      final PdfLayoutResult
+                                          layoutResultHeader2 = PdfTextElement(
+                                                  text: header2,
+                                                  font: h2font,
+                                                  brush: PdfSolidBrush(
+                                                      PdfColor(0, 0, 0)))
+                                              .draw(
+                                                  page: page,
+                                                  bounds: Rect.fromLTWH(
+                                                      0,
+                                                      165,
+                                                      page
+                                                          .getClientSize()
+                                                          .width,
+                                                      page
+                                                          .getClientSize()
+                                                          .height),
+                                                  format: PdfLayoutFormat(
+                                                      layoutType: PdfLayoutType
+                                                          .paginate))!;
+
+                                      final PdfLayoutResult
+                                          layoutResultHeader3 = PdfTextElement(
+                                                  text: header3,
+                                                  font: h2font,
+                                                  brush: PdfSolidBrush(
+                                                      PdfColor(0, 0, 0)))
+                                              .draw(
+                                                  page: page,
+                                                  bounds: Rect.fromLTWH(
+                                                      0,
+                                                      400,
+                                                      page
+                                                          .getClientSize()
+                                                          .width,
+                                                      page
+                                                          .getClientSize()
+                                                          .height),
+                                                  format: PdfLayoutFormat(
+                                                      layoutType: PdfLayoutType
+                                                          .paginate))!;
+
+                                      final PdfLayoutResult layoutResult =
+                                          PdfTextElement(
+                                                  text: paragraphText,
+                                                  font: font,
+                                                  brush: PdfSolidBrush(
+                                                      PdfColor(0, 0, 0)))
+                                              .draw(
+                                                  page: page,
+                                                  bounds: Rect.fromLTWH(
+                                                      0,
+                                                      50,
+                                                      page
+                                                          .getClientSize()
+                                                          .width,
+                                                      page
+                                                          .getClientSize()
+                                                          .height),
+                                                  format: PdfLayoutFormat(
+                                                      layoutType: PdfLayoutType
+                                                          .paginate))!;
+
+                                      final PdfLayoutResult layoutResultWidth =
+                                          PdfTextElement(
+                                                  text: widthText,
+                                                  font: font,
+                                                  brush: PdfSolidBrush(
+                                                      PdfColor(0, 0, 0)))
+                                              .draw(
+                                                  page: page,
+                                                  bounds: Rect.fromLTWH(
+                                                      70,
+                                                      430,
+                                                      page
+                                                          .getClientSize()
+                                                          .width,
+                                                      page
+                                                          .getClientSize()
+                                                          .height),
+                                                  format: PdfLayoutFormat(
+                                                      layoutType: PdfLayoutType
+                                                          .paginate))!;
+
+                                      final PdfLayoutResult layoutResultHeight =
+                                          PdfTextElement(
+                                                  text: heightText,
+                                                  font: font,
+                                                  brush: PdfSolidBrush(
+                                                      PdfColor(0, 0, 0)))
+                                              .draw(
+                                                  page: page,
+                                                  bounds: Rect.fromLTWH(
+                                                      10,
+                                                      460,
+                                                      page
+                                                          .getClientSize()
+                                                          .width,
+                                                      page
+                                                          .getClientSize()
+                                                          .height),
+                                                  format: PdfLayoutFormat(
+                                                      layoutType: PdfLayoutType
+                                                          .paginate))!;
+
+                                      // page.graphics.drawLine(
+                                      //     PdfPen(PdfColor(255, 0, 0)),
+                                      //     Offset(0, layoutResultHeader.bounds.bottom + 10),
+                                      //     Offset(page.getClientSize().width,
+                                      //         layoutResultHeader.bounds.bottom + 10));
+
+                                      page.graphics.drawLine(
+                                          PdfPen(PdfColor(255, 0, 0)),
+                                          Offset(0,
+                                              layoutResult.bounds.bottom + 10),
+                                          Offset(page.getClientSize().width,
+                                              layoutResult.bounds.bottom + 10));
+
+                                      //Read image data.
+                                      // final Uint8List imageData =
+                                      //     File('input.png').readAsBytesSync();
+                                      //Load the image using PdfBitmap.
+                                      final PdfBitmap image = PdfBitmap(bytes!);
+                                      //Draw the image to the PDF page.
+                                      page.graphics.drawImage(
+                                          image,
+                                          Rect.fromLTWH(
+                                              50,
+                                              190,
+                                              widget.order.materialCalculate![0]
+                                                      .widthPaper *
+                                                  0.1,
+                                              widget.order.materialCalculate![0]
+                                                      .heightPaper *
+                                                  0.1));
+
+                                      final byteData = await rootBundle.load(
+                                          'asset/images/papertemplate.png');
+
+                                      page.graphics.drawImage(
+                                          PdfBitmap(
+                                              byteData.buffer.asUint8List()),
+                                          const Rect.fromLTWH(
+                                              70, 450, 289.2, 114.6));
+
+                                      // Save the document.
+                                      List<int> bytess = await document.save();
+                                      //Dispose the document
+                                      document.dispose();
+
+                                      html.AnchorElement(
+                                          href:
+                                              "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytess)}")
+                                        ..setAttribute("download",
+                                            "template-${widget.order.customerName}-$formattedDate.pdf")
+                                        ..click();
+
+                                      setState(() {
+                                        loading = false;
+                                      });
+                                    }),
+                                  ),
+                                  Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      padding: EdgeInsets.all(10),
+                                      child: ButtonApp.buttonMainNext(
+                                          context, 'ปรับสถานะรอจัดส่ง',
+                                          () async {
+                                        // print(widget.boxOrder.id);
+                                        // print(widget.boxOrder.status);
+                                        var confirmOrder = widget.order;
+                                        confirmOrder.status = 'deliver';
+                                        await confirmOrder.updateOrder();
+                                        Navigator.pop(context, true);
+                                      }))
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              padding: EdgeInsets.all(10),
-                              child: ButtonApp.buttonMain(context, 'ใบเเบบตัด',
-                                  () async {
-                                final PdfStringFormat format = PdfStringFormat(
-                                    alignment: PdfTextAlignment.center,
-                                    lineAlignment: PdfVerticalAlignment.middle);
-
-                                var now = new DateTime.now();
-                                var formatter = new DateFormat('dd/MM/yyyy');
-                                String formattedDate = formatter.format(now);
-                                final bytes = await controller.capture();
-
-                                String propmtregular =
-                                    "asset/font/Prompt-Regular.ttf"; //path to asset
-                                ByteData prom =
-                                    await rootBundle.load(propmtregular);
-                                Uint8List soundbytes = prom.buffer.asUint8List(
-                                    prom.offsetInBytes, prom.lengthInBytes);
-                                PdfFont font = PdfTrueTypeFont(soundbytes, 12);
-
-                                String header = 'ใบเเบบตัด';
-                                String header2 = 'แนวการตัด';
-                                String header3 = 'แนวสับ/พับ';
-
-                                PdfFont h1font =
-                                    PdfTrueTypeFont(soundbytes, 20);
-
-                                PdfFont h2font =
-                                    PdfTrueTypeFont(soundbytes, 16);
-
-                                String paragraphText =
-                                    'ชื่อลูกค้า :  ${widget.order.customerName}\nวันจัดส่ง: ${formatter.format(widget.order.materialCalculate![0].calculateMat.deliverDate!)}\nกล่องฝาชน (${widget.order.name}) ขนาดต่อกล่อง ${widget.order.widthTemplate * 0.1} x ${widget.order.heightTemplate * 0.1} ซม.\nขนาดวัตถุดิบกระดาษ ${widget.order.materialCalculate![0].widthPaper * 0.1} x ${widget.order.materialCalculate![0].heightPaper * 0.1} ซม.';
-
-                                String widthText =
-                                    '      ${Algorithm.getWidth_Variants(widget.order) * 0.1}           ${widget.order.longBox * 0.1}           ${widget.order.widthBox * 0.1}           ${widget.order.longBox * 0.1}         ${Algorithm.getVariants(widget.order) * 0.1}      เซนติเมตร';
-
-                                String heightText =
-                                    '${(Algorithm.getHeight_Variants(widget.order) * 0.1).toStringAsFixed(2)} \n\n${widget.order.widthBox * 0.1} \n\n${(Algorithm.getHeight_Variants(widget.order) * 0.1).toStringAsFixed(2)}';
-
-                                final PdfDocument document = PdfDocument();
-
-                                final PdfPage page = document.pages.add();
-
-                                final PdfLayoutResult layoutResultHeader =
-                                    PdfTextElement(
-                                            text: header,
-                                            font: h1font,
-                                            brush: PdfSolidBrush(
-                                                PdfColor(0, 0, 0)))
-                                        .draw(
-                                            page: page,
-                                            bounds: Rect.fromLTWH(
-                                                0,
-                                                0,
-                                                page.getClientSize().width,
-                                                page.getClientSize().height),
-                                            format: PdfLayoutFormat(
-                                                layoutType:
-                                                    PdfLayoutType.paginate))!;
-
-                                final PdfLayoutResult layoutResultHeader2 =
-                                    PdfTextElement(
-                                            text: header2,
-                                            font: h2font,
-                                            brush: PdfSolidBrush(
-                                                PdfColor(0, 0, 0)))
-                                        .draw(
-                                            page: page,
-                                            bounds: Rect.fromLTWH(
-                                                0,
-                                                165,
-                                                page.getClientSize().width,
-                                                page.getClientSize().height),
-                                            format: PdfLayoutFormat(
-                                                layoutType:
-                                                    PdfLayoutType.paginate))!;
-
-                                final PdfLayoutResult layoutResultHeader3 =
-                                    PdfTextElement(
-                                            text: header3,
-                                            font: h2font,
-                                            brush: PdfSolidBrush(
-                                                PdfColor(0, 0, 0)))
-                                        .draw(
-                                            page: page,
-                                            bounds: Rect.fromLTWH(
-                                                0,
-                                                400,
-                                                page.getClientSize().width,
-                                                page.getClientSize().height),
-                                            format: PdfLayoutFormat(
-                                                layoutType:
-                                                    PdfLayoutType.paginate))!;
-
-                                final PdfLayoutResult layoutResult =
-                                    PdfTextElement(
-                                            text: paragraphText,
-                                            font: font,
-                                            brush: PdfSolidBrush(
-                                                PdfColor(0, 0, 0)))
-                                        .draw(
-                                            page: page,
-                                            bounds: Rect.fromLTWH(
-                                                0,
-                                                50,
-                                                page.getClientSize().width,
-                                                page.getClientSize().height),
-                                            format: PdfLayoutFormat(
-                                                layoutType:
-                                                    PdfLayoutType.paginate))!;
-
-                                final PdfLayoutResult layoutResultWidth =
-                                    PdfTextElement(
-                                            text: widthText,
-                                            font: font,
-                                            brush: PdfSolidBrush(
-                                                PdfColor(0, 0, 0)))
-                                        .draw(
-                                            page: page,
-                                            bounds: Rect.fromLTWH(
-                                                70,
-                                                430,
-                                                page.getClientSize().width,
-                                                page.getClientSize().height),
-                                            format: PdfLayoutFormat(
-                                                layoutType:
-                                                    PdfLayoutType.paginate))!;
-
-                                final PdfLayoutResult layoutResultHeight =
-                                    PdfTextElement(
-                                            text: heightText,
-                                            font: font,
-                                            brush: PdfSolidBrush(
-                                                PdfColor(0, 0, 0)))
-                                        .draw(
-                                            page: page,
-                                            bounds: Rect.fromLTWH(
-                                                10,
-                                                460,
-                                                page.getClientSize().width,
-                                                page.getClientSize().height),
-                                            format: PdfLayoutFormat(
-                                                layoutType:
-                                                    PdfLayoutType.paginate))!;
-
-                                // page.graphics.drawLine(
-                                //     PdfPen(PdfColor(255, 0, 0)),
-                                //     Offset(0, layoutResultHeader.bounds.bottom + 10),
-                                //     Offset(page.getClientSize().width,
-                                //         layoutResultHeader.bounds.bottom + 10));
-
-                                page.graphics.drawLine(
-                                    PdfPen(PdfColor(255, 0, 0)),
-                                    Offset(0, layoutResult.bounds.bottom + 10),
-                                    Offset(page.getClientSize().width,
-                                        layoutResult.bounds.bottom + 10));
-
-                                //Read image data.
-                                // final Uint8List imageData =
-                                //     File('input.png').readAsBytesSync();
-                                //Load the image using PdfBitmap.
-                                final PdfBitmap image = PdfBitmap(bytes!);
-                                //Draw the image to the PDF page.
-                                page.graphics.drawImage(
-                                    image,
-                                    Rect.fromLTWH(
-                                        50,
-                                        190,
-                                        widget.order.materialCalculate![0]
-                                                .widthPaper *
-                                            0.1,
-                                        widget.order.materialCalculate![0]
-                                                .heightPaper *
-                                            0.1));
-
-                                final byteData = await rootBundle
-                                    .load('asset/images/papertemplate.png');
-
-                                page.graphics.drawImage(
-                                    PdfBitmap(byteData.buffer.asUint8List()),
-                                    const Rect.fromLTWH(70, 450, 289.2, 114.6));
-
-                                // Save the document.
-                                List<int> bytess = await document.save();
-                                //Dispose the document
-                                document.dispose();
-
-                                html.AnchorElement(
-                                    href:
-                                        "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytess)}")
-                                  ..setAttribute("download",
-                                      "template-${widget.order.customerName}-$formattedDate.pdf")
-                                  ..click();
-                              }),
-                            ),
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                padding: EdgeInsets.all(10),
-                                child: ButtonApp.buttonMainNext(
-                                    context, 'ปรับสถานะรอจัดส่ง', () async {
-                                  // print(widget.boxOrder.id);
-                                  // print(widget.boxOrder.status);
-                                  var confirmOrder = widget.order;
-                                  confirmOrder.status = 'deliver';
-                                  await confirmOrder.updateOrder();
-                                      Navigator.pop(context, true);
-                                }))
-                          ],
-                        ),
-                      ],
-                    ),
-                  )),
-            )
-          ],
-        ),
-      ),
+                            ],
+                          ),
+                        )),
+                  )
+                ],
+              ),
+            ),
     );
   }
 

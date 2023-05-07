@@ -333,7 +333,7 @@ class _Tab1State extends State<Tab1> {
                                         confirmOrder.materialCalculate!
                                             .add(widget.listPaper[index]);
                                         await confirmOrder.updateOrder();
-                                         Navigator.pop(context, true);
+                                        Navigator.pop(context, true);
                                       }),
                                     ),
                                   ],
@@ -823,12 +823,15 @@ class _DetailState extends State<Detail> {
                   padding: const EdgeInsets.all(15.0),
                   child: Column(
                     children: [
-                      TextWidget.textGeneralWithColor(
-                          'ข้อมูลผลิตภัณฑ์', brownDark),
                       Row(
                         children: [
                           TextWidget.textGeneralWithColor(
                               'ข้อมูลผลิตภัณฑ์', brownDark),
+                          IconButton(
+                              onPressed: () {
+                                showAlertDialog(context, widget.order);
+                              },
+                              icon: const Icon(Icons.delete))
                         ],
                       ),
                       Row(
@@ -1017,5 +1020,41 @@ class _DetailState extends State<Detail> {
             height: MediaQuery.of(context).size.height)
       ],
     ));
+  }
+
+  showAlertDialog(BuildContext context, BoxOrder order) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text("ยกเลิก"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("ตกลง"),
+      onPressed: () async {
+        await order.deleteOrder();
+        Get.back();
+        Navigator.pop(context, true);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("ลบข้อมูลออเดอร์"),
+      content: const Text("กรุณายืนยัน หากต้องการลบข้อมูลออเดอร์"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

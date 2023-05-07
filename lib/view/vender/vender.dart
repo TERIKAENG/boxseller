@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../get/getData.dart';
 import '../../model/material.dart';
 import '../../model/vender.dart';
+import 'editMaterialInput.dart';
 
 class VendorList extends StatefulWidget {
   @override
@@ -257,15 +258,28 @@ class _VendorDetailsState extends State<VendorDetails> {
                       child: ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            color: Colors.white,
-                            child: ListTile(
-                              title: Text(
-                                '${snapshot.data![index].layer1} ${snapshot.data![index].layer2} ${snapshot.data![index].layer3} ${snapshot.data![index].layer4} ${snapshot.data![index].layer5}',
-                                style: TextStyle(fontSize: 20.0),
-                              ),
-                              subtitle:  Text('วัตถุดิบกระดาษ ขนาด : ${snapshot.data![index].widthPaper} x ${snapshot.data![index].heightPaper}\nราคา ${snapshot.data![index].pricePaper} บาท',
-                                style: TextStyle(fontSize: 16.0),
+                          return GestureDetector(
+                            onTap: () async {
+                              print(snapshot.data![index].id);
+                              bool res = await Get.to(EditMeaterialInput(
+                                material: snapshot.data![index],
+                                vender: widget.vender,
+                              ));
+                              if (res) {
+                                setState(() {});
+                              }
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              child: ListTile(
+                                title: Text(
+                                  '${snapshot.data![index].layer1} ${snapshot.data![index].layer2} ${snapshot.data![index].layer3} ${snapshot.data![index].layer4} ${snapshot.data![index].layer5}',
+                                  style: TextStyle(fontSize: 20.0),
+                                ),
+                                subtitle: Text(
+                                  'วัตถุดิบกระดาษ ขนาด : ${snapshot.data![index].widthPaper} x ${snapshot.data![index].heightPaper}\nราคา ${snapshot.data![index].pricePaper} บาท\nขั้นต่ำ ${snapshot.data![index].minimumPaper} แผ่น',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
                               ),
                             ),
                           );

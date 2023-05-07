@@ -38,8 +38,8 @@ class _SaleOrderPageState extends State<SaleOrderPage> {
                 //   });
                 // }
                 return GestureDetector(
-                  onTap: () {
-                    Get.to(CustomerDetail(
+                  onTap: () async {
+                    await Get.to(CustomerDetail(
                       customer: snapshot.data![index],
                     ));
                   },
@@ -68,16 +68,16 @@ class _SaleOrderPageState extends State<SaleOrderPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-
-           var res = await Get.to(const NewCustomer());
-            if (res) {
-              setState(() {});
-            }
+          var res = await Get.to(const NewCustomer());
+          if (res) {
+            setState(() {});
+          }
         },
         child: Icon(Icons.add),
       ),
     );
   }
+
 
   // Widget menu() {
   //   return Container(

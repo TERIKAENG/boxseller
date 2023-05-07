@@ -163,6 +163,10 @@ class BoxOrder {
         .catchError((error) => print('Failed: $error'));
   }
 
+  Future<void> deleteOrder() async {
+    orders.doc(id).delete();
+  }
+
   //ราคาต่อต้นทุนกล่อง
   double pricePerBox = 0;
   //จำนวนกระดาษที่ต้องสั่ง(ผ่านการเช็คขั้นต่ำ)
@@ -213,6 +217,8 @@ class BoxOrder {
     var mp = map['materialCalculate'];
     var mpp = json.decode(mp);
 
+    print('object : ${mpp}');
+
     List<MaterialPaper> data = [];
 
     for (var i = 0; i < mpp.length; i++) {
@@ -249,11 +255,10 @@ class BoxOrder {
       customerName: map['customerName'] as String,
       customerAddress: map['customerAddress'] as String,
       customerTel: map['customerTel'] as String,
-      customColor: map['customColor'] != null ? map['customColor'] as String : null,
+      customColor:
+          map['customColor'] != null ? map['customColor'] as String : null,
       codeColor: map['codeColor'] != null ? map['codeColor'] as String : null,
-      printArea:  map['printArea'] != null ? map['printArea'] as double : null,
-      
-
+      printArea: map['printArea'] != null ? map['printArea'] as double : null,
     );
   }
 

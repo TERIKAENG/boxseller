@@ -5,6 +5,7 @@ import 'package:boxseller/get/getData.dart';
 import 'package:boxseller/model/calculateMat.dart';
 import 'package:boxseller/model/material.dart';
 import 'package:boxseller/model/template.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../model/order.dart';
 
@@ -40,7 +41,6 @@ class Algorithm {
         }
       }
     }
-
     return ronType;
   }
 
@@ -49,10 +49,10 @@ class Algorithm {
     var heightCal = 0.0;
 
     if (box.ronType == 'BC') {
-      widthCal = ((((box.widthBox - 3) / 2) + 2) * 2) + box.heightBox;
+      widthCal = ((((box.widthBox - 3) / 2)) * 2) + box.heightBox;
       heightCal = (box.widthBox - 3) + (box.longBox * 2) + box.widthBox + 30;
     } else {
-      widthCal = ((((box.widthBox - 2) / 2) + 2) * 2) + box.heightBox;
+      widthCal = ((((box.widthBox - 2) / 2)) * 2) + box.heightBox;
       heightCal = (box.widthBox - 2) + (box.longBox * 2) + box.widthBox + 26;
     }
 
@@ -71,24 +71,20 @@ class Algorithm {
     return w;
   }
 
-
   static double getHeight_Variants(BoxOrder box) {
     double w = 0.0;
     if (box.ronType == 'BC') {
-      w = ((box.widthBox - 3)/2) + 2;
+      w = ((box.widthBox - 3) / 2) + 2;
     } else {
-      w = ((box.widthBox - 2)/2) + 2;
+      w = ((box.widthBox - 2) / 2) + 2;
     }
     return w;
   }
 
-
-
   static double getVariants(BoxOrder box) {
-
     if (box.ronType == 'BC') {
       return 30;
-    } 
+    }
     return 26;
   }
 
@@ -126,7 +122,7 @@ class Algorithm {
   }
 
   static dynamic compareBoxPerMaterial(double boxTemplateWidth,
-      boxTemplateHeight, venderPaperWidth, venderPaperHeight) {
+      boxTemplateHeight, venderPaperWidth, venderPaperHeight)  {
     List<Map<String, dynamic>> lst = [];
     var obj = Algorithm.findPatternModel1(boxTemplateWidth, boxTemplateHeight,
         venderPaperWidth, venderPaperHeight, 0);
@@ -160,6 +156,8 @@ class Algorithm {
         venderPaperWidth, venderPaperHeight, 0);
     lst.add(obj8);
 
+    // await newLog(lst);
+
     dynamic max;
     if (lst.isNotEmpty) {
       max = lst.first;
@@ -171,6 +169,19 @@ class Algorithm {
 
     return max;
   }
+
+  // static CollectionReference calculateLogs =
+  //     FirebaseFirestore.instance.collection('calculateLogs');
+
+  // static Future<void> newLog(List<Map<String, dynamic>> lst) {
+  //   var res = jsonEncode(lst);
+  //   // Call the user's CollectionReference to add a new user
+
+  //   return calculateLogs
+  //       .add(res)
+  //       .then((value) => print("Order Added"))
+  //       .catchError((error) => print("Failed to add Order: $error"));
+  // }
 
   static Map<String, dynamic> findPatternModel1(double smWidth, double smHeight,
       double lgWidth, double lgHeight, int countbox) {
@@ -193,6 +204,14 @@ class Algorithm {
       countbox = countbox + amount2;
       rotateRow += 1;
       lgHeight = lgHeight - smWidth;
+    }
+
+    if (primaryRow > 12) {
+      primaryRow = 12;
+    }
+
+    if (rotateRow > 12) {
+      rotateRow = 12;
     }
 
     return {
@@ -233,6 +252,14 @@ class Algorithm {
       lgHeight = lgHeight - smWidth;
     }
 
+    if (primaryRow > 12) {
+      primaryRow = 12;
+    }
+
+    if (rotateRow > 12) {
+      rotateRow = 12;
+    }
+
     return {
       'start_width': smWidth,
       'start_height': smHeight,
@@ -265,6 +292,14 @@ class Algorithm {
       countbox = countbox + amount2;
       rotateRow += 1;
       lgWidth = lgWidth - smHeight;
+    }
+
+    if (primaryRow > 12) {
+      primaryRow = 12;
+    }
+
+    if (rotateRow > 12) {
+      rotateRow = 12;
     }
 
     return {
@@ -305,6 +340,14 @@ class Algorithm {
       lgWidth = lgWidth - smHeight;
     }
 
+    if (primaryRow > 12) {
+      primaryRow = 12;
+    }
+
+    if (rotateRow > 12) {
+      rotateRow = 12;
+    }
+
     return {
       'start_width': smWidth,
       'start_height': smHeight,
@@ -331,10 +374,6 @@ class Algorithm {
     var cost = (calculateMat.paperAmount * materialPaper.pricePaper) /
         calculateBoxAmount(calculateMat);
 
-    if (box.isUseColorOver) {
-      cost = cost + 2; // เทสีเยอะบวกกล่องละ 2 บาท
-    }
-
     return cost;
   }
 
@@ -353,7 +392,7 @@ class Algorithm {
     var costNet = cost * calculateMat.boxAmount;
     costNet = costNet + (costNet * 0.3); // + กำไร 30%
 
-    if (box.useDesignService == 1) {
+    if (box.useDesignService == 1 || box.useDesignService == 2) {
       if (box.codeColor == 'black' ||
           box.codeColor == 'red' ||
           box.codeColor == 'green' ||
@@ -362,7 +401,9 @@ class Algorithm {
         costNet = costNet + 1600; //-> ค่าผสมสี
       }
       costNet = costNet + 800; //-> ค่าบล็อคพิม
-      costNet = costNet + (box.printArea! * 6); //-> ค่าพิมตารางเมตรละ 6 บาท
+      costNet = costNet +
+          ((box.printArea! * 6) *
+              calculateMat.boxAmount); //-> ค่าพิมตารางนิ้วละ 6 บาท ต่อกล่อง
     }
     return costNet;
   }

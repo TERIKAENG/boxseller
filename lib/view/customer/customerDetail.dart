@@ -1,4 +1,6 @@
+import 'package:boxseller/get/algorithm.dart';
 import 'package:boxseller/model/order.dart';
+import 'package:boxseller/view/customer/editCustomer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -46,16 +48,41 @@ class _CustomerDetailState extends State<CustomerDetail> {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextWidget.textGeneral('ข้อมูลลูกค้า'),
+                      GestureDetector(
+                          onTap: () async {
+                            var res = await Get.to(EditCustomer(
+                              customer: widget.customer,
+                            ));
+
+                            if (res) {
+                              widget.customer =
+                                  await refresh(widget.customer.id!);
+                              setState(() {});
+                            }
+                          },
+                          child: TextWidget.textGeneral('ข้อมูลลูกค้า')),
                       Card(
-                          child: ListTile(
-                        title: Text('ชื่อลูกค้า : ${widget.customer.name}'),
-                        subtitle: Text(
-                            'ที่อยู่ : ${widget.customer.address}\n โทร :${widget.customer.tel}'),
-                        trailing: const Icon(
-                          Icons.house_outlined,
-                          color: Colors.brown,
-                          size: 36.0,
+                          child: GestureDetector(
+                        onTap: () async {
+                          var res = await Get.to(EditCustomer(
+                            customer: widget.customer,
+                          ));
+
+                          if (res) {
+                            widget.customer =
+                                await refresh(widget.customer.id!);
+                            setState(() {});
+                          }
+                        },
+                        child: ListTile(
+                          title: Text('ชื่อลูกค้า : ${widget.customer.name}'),
+                          subtitle: Text(
+                              'ที่อยู่ : ${widget.customer.address}\n โทร :${widget.customer.tel}'),
+                          trailing: const Icon(
+                            Icons.house_outlined,
+                            color: Colors.brown,
+                            size: 36.0,
+                          ),
                         ),
                       )),
                       const SizedBox(
@@ -109,10 +136,6 @@ class _CustomerDetailState extends State<CustomerDetail> {
                   var res = await Get.to(OrderDetail(
                     order: snapshot.data![index],
                   ));
-
-                  if (res) {
-                    setState(() {});
-                  }
                 },
                 child: Card(
                     child: ListTile(
@@ -154,5 +177,10 @@ class _CustomerDetailState extends State<CustomerDetail> {
         ],
       ),
     );
+  }
+
+  Future<Customer> refresh(String id) async {
+    Customer customer = await GetData().getDataCustomerByID(id);
+    return customer;
   }
 }

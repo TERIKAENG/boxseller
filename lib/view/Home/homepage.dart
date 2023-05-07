@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 10,
           ),
-          ButtonApp.buttonMainWithIcon(context, 'รายการสั่งวัตถุดิบกระดาษ', () {
+          ButtonApp.buttonMainWithIcon(context, 'รายการจัดซื้อวัตถุดิบกระดาษ', () {
             setState(() {
               showWideget = const PurchasePage();
             });

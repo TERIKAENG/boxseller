@@ -22,8 +22,7 @@ class MaterialPaper {
   double heightPaper;
   double pricePaper;
   int minimumPaper;
-  int deliverIndays
-  ;
+  int deliverIndays;
   CalculateMat calculateMat = CalculateMat(
       boxAmount: 0,
       costNet: 0,
@@ -70,8 +69,7 @@ class MaterialPaper {
     };
   }
 
-  factory MaterialPaper.fromMap(Map<String, dynamic> map,int mode) {
-    
+  factory MaterialPaper.fromMap(Map<String, dynamic> map, int mode) {
     return MaterialPaper(
       id: map['id'] != null ? map['id'] as String : null,
       vender: map['vender'] as String,
@@ -88,14 +86,16 @@ class MaterialPaper {
       pricePaper: map['pricePaper'] as double,
       minimumPaper: map['minimumPaper'] as int,
       deliverIndays: map['deliverIndays'] as int,
-      calculateMat: mode == 1 ? CalculateMat.fromJson(map['calculateMat']) : CalculateMat.fromJson(json.decode(map['calculateMat'])),
+      calculateMat: mode == 1
+          ? CalculateMat.fromJson(map['calculateMat'])
+          : CalculateMat.fromJson(json.decode(map['calculateMat'])),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory MaterialPaper.fromJson(String source,int mode) =>
-      MaterialPaper.fromMap(json.decode(source) as Map<String, dynamic>,mode);
+  factory MaterialPaper.fromJson(String source, int mode) =>
+      MaterialPaper.fromMap(json.decode(source) as Map<String, dynamic>, mode);
 
   MaterialPaper copyWith(
       {String? id,
@@ -144,6 +144,7 @@ class MaterialPaper {
 
   Future<void> newMaterial() {
     // Call the user's CollectionReference to add a new user
+
     return materials
         .add({
           'vender': vender,
@@ -164,6 +165,30 @@ class MaterialPaper {
         })
         .then((value) => print("Order Added"))
         .catchError((error) => print("Failed to add Order: $error"));
+  }
+
+  Future<void> updateMaterial() async {
+    materials
+        .doc(id)
+        .update({
+          'vender': vender,
+          'venderName': venderName,
+          'paperType': paperType,
+          'layer1': layer1,
+          'layer2': layer2,
+          'layer3': layer3,
+          'layer4': layer4,
+          'layer5': layer5,
+          'ronType': ronType,
+          'widthPaper': widthPaper,
+          'heightPaper': heightPaper,
+          'pricePaper': pricePaper,
+          'minimumPaper': minimumPaper,
+          'deliverIndays': deliverIndays,
+          'calculateMat': json.encode(calculateMat),
+        }) // <-- Updated data
+        .then((_) => print('Success'))
+        .catchError((error) => print('Failed: $error'));
   }
 
   @override
